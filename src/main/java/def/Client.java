@@ -48,10 +48,10 @@ public class Client {
         messageLabel.setBackground(Color.lightGray);
         frame.getContentPane().add(messageLabel, BorderLayout.SOUTH);
 
-        var boardPanel = new JPanel();
+        JPanel boardPanel = new JPanel();
         boardPanel.setBackground(Color.black);
         boardPanel.setLayout(new GridLayout(3, 3, 2, 2));
-        for (var i = 0; i < board.length; i++) {
+        for (int i = 0; i < board.length; i++) {
             final int j = i;
             board[i] = new Square();
             board[i].addMouseListener(new MouseAdapter() {
@@ -76,9 +76,9 @@ public class Client {
      */
     public void play() throws Exception {
         try {
-            var response = in.nextLine();
-            var mark = response.charAt(8);
-            var opponentMark = mark == 'X' ? 'O' : 'X';
+            String response = in.nextLine();
+            char mark = response.charAt(8);
+            char opponentMark = mark == 'X' ? 'O' : 'X';
             frame.setTitle("Tic Tac Toe: Player " + mark);
             while (in.hasNextLine()) {
                 response = in.nextLine();
@@ -87,7 +87,7 @@ public class Client {
                     currentSquare.setText(mark);
                     currentSquare.repaint();
                 } else if (response.startsWith("OPPONENT_MOVED")) {
-                    var loc = Integer.parseInt(response.substring(15));
+                    int loc = Integer.parseInt(response.substring(15));
                     board[loc].setText(opponentMark);
                     board[loc].repaint();
                     messageLabel.setText("Opponent moved, your turn");
