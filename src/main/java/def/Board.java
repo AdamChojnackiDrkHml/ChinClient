@@ -9,15 +9,16 @@ import java.util.ArrayList;
 
 public class Board extends JPanel
 {
+
     private int[][] poolType = new int[17][17];
     ArrayList<Pool> pools = new ArrayList<>();
 
 
-    Board(int Id)
+    Board(int Id, int numOfPlayers)
     {
+        setBackground(new Color(150,107,43));
         choosePools();
-        setPlayerNums(Id);
-        setColors();
+        setUpBoardForPlayers(numOfPlayers);
         repaint();
     }
 
@@ -33,11 +34,11 @@ public class Board extends JPanel
                     Pool newPool;
                     if(i % 2 == 0)
                     {
-                        newPool = new Pool(j * 30, i * 30, 30, i, j);
+                        newPool = new Pool(j * 40, i * 40 + 10, 40, i, j);
                     }
                     else
                     {
-                        newPool = new Pool(j * 30 + 15, i * 30,30, i, j);
+                        newPool = new Pool(j * 40 + 20, i * 40 + 10,40, i, j);
                     }
                     pools.add(newPool);
                 }
@@ -49,150 +50,26 @@ public class Board extends JPanel
         }
     }
 
-    private void setPlayerNums(int Id)
+    void setUpBoardForPlayers(int numOfPlayers)
     {
-        for(int i = 0; i < poolType.length; i++)
+        PlayerPoolsInterface gamePoolsRules = new StandardGamePools();
+        switch (numOfPlayers)
         {
-            for(int j = 0; j < poolType.length; j++)
-            {
-                if(poolType[i][j] != 0)
-                {
-                    if(i > 12)
-                    {
-                        poolType[i][j] = 1 + Id;
-                    }
-                    if(i < 4)
-                    {
-                        poolType[i][j] = 1 + (3 + Id) % 6;
-                    }
-                    if(i == 4)
-                    {
-                        if(j < 6)
-                        {
-                            poolType[i][j] = 1+ (2 + Id) % 6;
-                        }
-                        else if(j > 10)
-                        {
-                            poolType[i][j] = 1+ (4 + Id) % 6;
-                        }
-                        else
-                        {
-                            poolType[i][j] = 7;
-                        }
-                    }
-                    if(i == 5)
-                    {
-                        if(j < 5)
-                        {
-                            poolType[i][j] = 1 + (2 + Id) % 6;
-                        }
-                        else if(j > 10)
-                        {
-                            poolType[i][j] = 1 + (4 + Id) % 6;
-                        }
-                        else
-                        {
-                            poolType[i][j] = 7;
-                        }
-                    }
-                    if(i == 6)
-                    {
-                        if(j < 5)
-                        {
-                            poolType[i][j] = 1 + (2 + Id) % 6;
-                        }
-                        else if(j > 11)
-                        {
-                            poolType[i][j] = 1 + (4 + Id) % 6;
-                        }
-                        else
-                        {
-                            poolType[i][j] = 7;
-                        }
-                    }
-                    if(i == 7)
-                    {
-                        if(j == 3)
-                        {
-                            poolType[i][j] = 1 + (2 + Id) % 6;
-                        }
-                        else if(j == 12)
-                        {
-                            poolType[i][j] = 1 + (4 + Id) % 6;
-                        }
-                        else
-                        {
-                            poolType[i][j] = 7;
-                        }
-                    }
-                    if(i == 8)
-                    {
-                        poolType[i][j] = 7;
-                    }
-                    if(i == 12)
-                    {
-                        if(j < 6)
-                        {
-                            poolType[i][j] = 1 + (1 + Id) % 6;
-                        }
-                        else if(j > 10)
-                        {
-                            poolType[i][j] = 1 + (5 + Id) % 6;
-                        }
-                        else
-                        {
-                            poolType[i][j] = 7;
-                        }
-                    }
-                    if(i == 11)
-                    {
-                        if(j < 5)
-                        {
-                            poolType[i][j] = 1 + (1 + Id) % 6;
-                        }
-                        else if(j > 10)
-                        {
-                            poolType[i][j] = 1 + (5 + Id) % 6;
-                        }
-                        else
-                        {
-                            poolType[i][j] = 7;
-                        }
-                    }
-                    if(i == 10)
-                    {
-                        if(j < 5)
-                        {
-                            poolType[i][j] = 1 + (1 + Id) % 6;
-                        }
-                        else if(j > 11)
-                        {
-                            poolType[i][j] = 1+ (5 + Id) % 6;
-                        }
-                        else
-                        {
-                            poolType[i][j] = 7;
-                        }
-                    }
-                    if(i == 9)
-                    {
-                        if(j == 3)
-                        {
-                            poolType[i][j] = 1 + (1 + Id) % 6;
-                        }
-                        else if(j == 12)
-                        {
-                            poolType[i][j] = 1 + (5 + Id) % 6;
-                        }
-                        else
-                        {
-                            poolType[i][j] = 7;
-                        }
-                    }
-                }
-            }
+            case 2:
+                pools = gamePoolsRules.setBoardForTwoPlayers(pools);
+                break;
+            case 3:
+                pools = gamePoolsRules.setBoardForThreePlayers(pools);
+                break;
+            case 4:
+                pools = gamePoolsRules.setBoardForFourPlayers(pools);
+                break;
+            case 6:
+                pools = gamePoolsRules.setBoardForSixPlayers(pools);
+                break;
         }
     }
+
     private boolean isThisValidPool(int xCord, int yCord)
     {
         return !(((yCord == 13 || yCord == 3) && (xCord > 9 || xCord < 6)) ||
@@ -206,51 +83,20 @@ public class Board extends JPanel
                 (xCord == 14 && yCord > 4 && yCord < 12) ||
                 (xCord == 13 && yCord > 6 && yCord < 10));
     }
-    private void setColors()
-    {
-        for(Pool pool : pools)
-        {
-            int yPos = pool.yPos;
-            int xPos = pool.xPos;
-            switch (poolType[yPos][xPos])
-            {
-                case 1:
-                    pool.setInsideColor(Color.MAGENTA);
-                    break;
-                case 2:
-                    pool.setInsideColor(Color.green);
-                    break;
-                case 3:
-                    pool.setInsideColor(Color.orange);
-                    break;
-                case 4:
-                    pool.setInsideColor(Color.RED);
-                    break;
-                case 5:
-                    pool.setInsideColor(Color.blue);
-                    break;
-                case 6:
-                    pool.setInsideColor(Color.yellow);
-                    break;
-                case 7:
-                    pool.setInsideColor(Color.gray);
-                    break;
-
-            }
-        }
-    }
     protected void paintComponent(Graphics g)
     {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
-
         for(Pool pool : pools)
         {
             g2d.setColor(pool.getInsideColor());
             g2d.fill(pool.ellipse2D);
+            g2d.setColor(pool.getBorderColor());
+            g2d.draw(pool.ellipse2D);
         }
 
     }
+
     MouseAdapter MyMouseListener = new MouseAdapter()
     {
         @Override

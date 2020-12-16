@@ -23,8 +23,6 @@ public class Client {
     private JFrame frame = new JFrame("Tic Tac Toe");
     private JLabel messageLabel = new JLabel("...");
 
-    //private Square currentSquare;
-    private Row[] rows = new Row[17];
 
     private Socket socket;
     private Scanner in;
@@ -32,13 +30,13 @@ public class Client {
 
     public Client(String serverAddress) throws Exception {
 
-        socket = new Socket(serverAddress, 58901);
-        in = new Scanner(socket.getInputStream());
-        out = new PrintWriter(socket.getOutputStream(), true);
+     //   socket = new Socket(serverAddress, 58900);
+      //  in = new Scanner(socket.getInputStream());
+      //  out = new PrintWriter(socket.getOutputStream(), true);
 
         messageLabel.setBackground(Color.lightGray);
         frame.getContentPane().add(messageLabel, BorderLayout.SOUTH);
-        frame.getContentPane().add(new Board(1));
+        frame.getContentPane().add(new Board(1, 4));
      //   frame.pack();
     }
 
@@ -110,10 +108,10 @@ public class Client {
         }
         Client client = new Client(args[0]);
         client.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        client.frame.setSize(875, 900);
+        client.frame.setSize(40 * 18, 40 * 19);
       //  client.frame.revalidate();
         client.frame.setVisible(true);
-//        client.frame.setResizable(false);
+        client.frame.setResizable(false);
         client.play();
     }
 }

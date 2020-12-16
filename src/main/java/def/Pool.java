@@ -14,6 +14,8 @@ public class Pool
     Pool(double xCord, double yCord, double size, int i, int j)
     {
         ellipse2D = new Ellipse2D.Double(xCord, yCord, size, size);
+        borderColor = Color.BLACK;
+        insideColor = Color.GRAY;
         xPos = j;
         yPos = i;
 
@@ -37,6 +39,5 @@ public class Pool
     public void setInsideColor(Color insideColor)
     {
         this.insideColor = insideColor;
-        setBorderColor(insideColor);
     }
 }
