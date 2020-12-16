@@ -1,12 +1,9 @@
 package def;
 
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.Scanner;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.concurrent.Flow;
 
 import javax.swing.*;
 
@@ -26,7 +23,7 @@ public class Client {
     private JFrame frame = new JFrame("Tic Tac Toe");
     private JLabel messageLabel = new JLabel("...");
 
-    private Square currentSquare;
+    //private Square currentSquare;
     private Row[] rows = new Row[17];
 
     private Socket socket;
@@ -41,46 +38,8 @@ public class Client {
 
         messageLabel.setBackground(Color.lightGray);
         frame.getContentPane().add(messageLabel, BorderLayout.SOUTH);
-
-        JPanel boardPanel = new JPanel();
-        boardPanel.setBackground(Color.black);
-        boardPanel.setLayout(new GridLayout(17, 1, 1, 1));
-        for (int i = 0; i < rows.length; i++)
-        {
-            rows[i] = new Row(i);
-            rows[i].setSize(boardPanel.getSize());
-
-            for(int j = 0; j < rows.length; j++)
-            {
-
-                final int k = i;
-                final int l = j;
-                Square square = new Square();
-
-                if(isThisValidPool(j,i))
-                {
-                    square.setBackground(Color.MAGENTA);
-                }
-                square.addMouseListener(new MouseAdapter()
-                {
-                    public void mousePressed(MouseEvent e)
-                    {
-                        try
-                        {
-                            currentSquare = (Square) rows[k].getContent(l);
-                        } catch (Exception exception)
-                        {
-                            exception.printStackTrace();
-                        }
-                        out.println("MOVE (" + k + "," + l + ")");
-                    }
-                });
-                rows[i].setContent(j, square);
-            }
-            rows[i].initializePools();
-            boardPanel.add(rows[i]);
-        }
-        frame.getContentPane().add(boardPanel, BorderLayout.CENTER);
+        frame.getContentPane().add(new Board(1));
+     //   frame.pack();
     }
 
     /**
@@ -135,20 +94,15 @@ public class Client {
     }
 
     static class Square extends JPanel {
-        JLabel label = new JLabel();
+
 
         public Square() {
             setBackground(Color.white);
-            setLayout(new GridBagLayout());
-            label.setFont(new Font("Arial", Font.BOLD, 40));
-            add(label);
         }
 
-        public void setText(char text) {
-            label.setForeground(text == 'X' ? Color.BLUE : Color.RED);
-            label.setText(text + "");
-        }
+
     }
+
     public static void main(String[] args) throws Exception {
         if (args.length != 1) {
             System.err.println("Pass the server IP as the sole command line argument");
@@ -156,22 +110,10 @@ public class Client {
         }
         Client client = new Client(args[0]);
         client.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        client.frame.setSize(320, 320);
+        client.frame.setSize(875, 900);
+      //  client.frame.revalidate();
         client.frame.setVisible(true);
-        client.frame.setResizable(false);
+//        client.frame.setResizable(false);
         client.play();
-    }
-    private static boolean isThisValidPool(int xCord, int yCord)
-    {
-        return !(((yCord == 13 || yCord == 3) && (xCord > 9 || xCord < 6)) ||
-                ((yCord == 14 || yCord == 2) && (xCord > 9 || xCord < 7)) ||
-                ((yCord == 15 || yCord == 1) && (xCord > 8 || xCord < 7)) ||
-                ((yCord == 16 || yCord == 0) && (xCord != 8)) ||
-                (xCord < 2) ||
-                (xCord > 14) ||
-                (xCord == 2 && (yCord > 5 && yCord < 11 )) ||
-                (xCord == 3 && yCord == 8) ||
-                (xCord == 14 && yCord > 4 && yCord < 12) ||
-                (xCord == 13 && yCord > 7 && yCord < 10));
     }
 }
