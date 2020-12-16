@@ -36,7 +36,7 @@ public class Client {
 
         messageLabel.setBackground(Color.lightGray);
         frame.getContentPane().add(messageLabel, BorderLayout.SOUTH);
-        frame.getContentPane().add(new Board(1, 4));
+        frame.getContentPane().add(new Board(5, 6));
      //   frame.pack();
     }
 
@@ -91,15 +91,6 @@ public class Client {
         } */
     }
 
-    static class Square extends JPanel {
-
-
-        public Square() {
-            setBackground(Color.white);
-        }
-
-
-    }
 
     public static void main(String[] args) throws Exception {
         if (args.length != 1) {

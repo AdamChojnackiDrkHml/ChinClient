@@ -5,8 +5,7 @@ import java.util.ArrayList;
 
 public interface PlayerPoolsInterface
 {
-
-
+    boolean isMoveValid(int rowNum, Pool originalPosition, Pool desirePosition);
     Pool[][] setUpperPools(Pool[][] pools);
     Pool[][] setUpperLeftPools(Pool[][] pools);
     Pool[][] setUpperRightPools(Pool[][] pools);
