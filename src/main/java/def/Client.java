@@ -24,14 +24,14 @@ public class Client
     public Client(String serverAddress) throws Exception 
     {
 
-        socket = new Socket(serverAddress, 58900);
-        in = new Scanner(socket.getInputStream());
-        out = new PrintWriter(socket.getOutputStream(), true);
-        System.out.println(in.next());
+     //   socket = new Socket(serverAddress, 58900);
+    //    in = new Scanner(socket.getInputStream());
+     //   out = new PrintWriter(socket.getOutputStream(), true);
+   //     System.out.println(in.next());
 
         messageLabel.setBackground(Color.lightGray);
         frame.getContentPane().add(messageLabel, BorderLayout.SOUTH);
-        frame.getContentPane().add(new Board(5, 6));
+        frame.getContentPane().add(new Board(5, 4));
      //   frame.pack();
 
     }
