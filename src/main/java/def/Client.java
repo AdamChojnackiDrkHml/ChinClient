@@ -31,24 +31,6 @@ public class Client
 
         messageLabel.setBackground(Color.lightGray);
         frame.getContentPane().add(messageLabel, BorderLayout.SOUTH);
-
-        var boardPanel = new JPanel();
-        boardPanel.setBackground(Color.black);
-        boardPanel.setLayout(new GridLayout(3, 3, 2, 2));
-        for (var i = 0; i < board.length; i++) 
-        {
-            final int j = i;
-            board[i] = new Square();
-            board[i].addMouseListener(new MouseAdapter() 
-            {
-                public void mousePressed(MouseEvent e) 
-                {
-                    currentSquare = board[j];
-                    out.println("MOVE " + j);
-                }
-            });
-            boardPanel.add(board[i]);
-        }
         frame.getContentPane().add(new Board(5, 6));
      //   frame.pack();
 
@@ -123,25 +105,6 @@ public class Client
             socket.close();
             frame.dispose();
         } */
-    }
-
-    static class Square extends JPanel 
-    {
-        JLabel label = new JLabel();
-
-        public Square() 
-        {
-            setBackground(Color.white);
-            setLayout(new GridBagLayout());
-            label.setFont(new Font("Arial", Font.BOLD, 40));
-            add(label);
-        }
-
-        public void setText(char text) 
-        {
-            label.setForeground(text == 'X' ? Color.BLUE : Color.RED);
-            label.setText(text + "");
-        }
     }
 
     public static void main(String[] args) throws Exception 

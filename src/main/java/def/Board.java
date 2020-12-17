@@ -20,7 +20,7 @@ public class Board extends JPanel
 
     Board(int Id, int numOfPlayers)
     {
- //       setBackground(new Color(147, 197, 232, 255));
+       // setBackground(new Color(147, 197, 232, 255));
         choosePools();
         chooseColor(Id);
         setUpBoardForPlayers(numOfPlayers);
