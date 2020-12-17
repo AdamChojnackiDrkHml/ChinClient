@@ -30,9 +30,10 @@ public class Client {
 
     public Client(String serverAddress) throws Exception {
 
-     //   socket = new Socket(serverAddress, 58900);
-      //  in = new Scanner(socket.getInputStream());
-      //  out = new PrintWriter(socket.getOutputStream(), true);
+        socket = new Socket(serverAddress, 58900);
+        in = new Scanner(socket.getInputStream());
+        out = new PrintWriter(socket.getOutputStream(), true);
+        System.out.println(in.next());
 
         messageLabel.setBackground(Color.lightGray);
         frame.getContentPane().add(messageLabel, BorderLayout.SOUTH);

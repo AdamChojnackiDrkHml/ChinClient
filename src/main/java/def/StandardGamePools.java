@@ -173,7 +173,7 @@ public class StandardGamePools implements PlayerPoolsInterface
 
     public Pool[][] setBoardForThreePlayers(Pool[][] pools)
     {
-        return setBottomPools(setUpperLeftPools(setBottomRightPools(pools)));
+        return setBottomPools(setUpperLeftPools(setUpperRightPools(pools)));
 
     }
     public Pool[][] setBoardForFourPlayers(Pool[][] pools)

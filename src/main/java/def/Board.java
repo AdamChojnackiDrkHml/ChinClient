@@ -20,7 +20,7 @@ public class Board extends JPanel
 
     Board(int Id, int numOfPlayers)
     {
-        setBackground(new Color(150,107,43));
+ //       setBackground(new Color(147, 197, 232, 255));
         choosePools();
         chooseColor(Id);
         setUpBoardForPlayers(numOfPlayers);
@@ -129,6 +129,12 @@ public class Board extends JPanel
     {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
+        Color color1 = new Color(52,143,80);
+        Color color2 = new Color(86,180,211);
+        GradientPaint gp = new GradientPaint(0,0, color1,180, this.getHeight(), color2 );
+        g2d.setPaint(gp);
+        g2d.fillRect(0,0,this.getWidth(), this.getHeight());
+
         for(Pool[] row : pools2)
         {
             for(Pool pool : row)
@@ -142,6 +148,7 @@ public class Board extends JPanel
                 }
             }
         }
+
 
     }
 
