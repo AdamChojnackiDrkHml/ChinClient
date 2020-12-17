@@ -1,20 +1,11 @@
 package def;
 
-import java.awt.Font;
-import java.awt.Color;
-import java.awt.GridLayout;
-import java.awt.GridBagLayout;
-import java.awt.BorderLayout;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.*;
 import java.util.Scanner;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 /**
  * A client for a multi-player Chinese checkers toe game.
@@ -25,8 +16,6 @@ public class Client
     private JFrame frame = new JFrame("Chinese checkers");
     private JLabel messageLabel = new JLabel("...");
 
-    private Square[] board = new Square[9];
-    private Square currentSquare;
 
     private Socket socket;
     private Scanner in;
@@ -35,12 +24,14 @@ public class Client
     public Client(String serverAddress) throws Exception 
     {
 
-        socket = new Socket(serverAddress, 58901);
+        socket = new Socket(serverAddress, 58900);
         in = new Scanner(socket.getInputStream());
         out = new PrintWriter(socket.getOutputStream(), true);
+        System.out.println(in.next());
 
         messageLabel.setBackground(Color.lightGray);
         frame.getContentPane().add(messageLabel, BorderLayout.SOUTH);
+<<<<<<< HEAD
 
         var boardPanel = new JPanel();
         boardPanel.setBackground(Color.black);
@@ -59,6 +50,10 @@ public class Client
             boardPanel.add(board[i]);
         }
         frame.getContentPane().add(boardPanel, BorderLayout.CENTER);
+=======
+        frame.getContentPane().add(new Board(5, 6));
+     //   frame.pack();
+>>>>>>> branch 'master' of https://github.com/AdamChojnackiDrkHml/ChinClient
     }
 
     /**
@@ -70,6 +65,7 @@ public class Client
      * game. If the answer is no, the loop is exited and the server is sent a "QUIT"
      * message.
      */
+<<<<<<< HEAD
     public void play() throws Exception 
     {
         try 
@@ -77,6 +73,13 @@ public class Client
             var response = in.nextLine();
             var mark = response.charAt(8);
             var opponentMark = mark == 'X' ? 'O' : 'X';
+=======
+    public void play() throws Exception {
+  /*      try {
+            String response = in.nextLine();
+            char mark = response.charAt(8);
+            char opponentMark = mark == 'X' ? 'O' : 'X';
+>>>>>>> branch 'master' of https://github.com/AdamChojnackiDrkHml/ChinClient
             frame.setTitle("Tic Tac Toe: Player " + mark);
             while (in.hasNextLine()) 
             {
@@ -86,12 +89,19 @@ public class Client
                     messageLabel.setText("Valid move, please wait");
                     currentSquare.setText(mark);
                     currentSquare.repaint();
+<<<<<<< HEAD
                 } 
                 else if (response.startsWith("OPPONENT_MOVED")) 
                 {
                     var loc = Integer.parseInt(response.substring(15));
                     board[loc].setText(opponentMark);
                     board[loc].repaint();
+=======
+                } else if (response.startsWith("OPPONENT_MOVED")) {
+                    int loc = Integer.parseInt(response.substring(15));
+               //     board[loc][5].setText(opponentMark);
+                 //   board[loc][5].repaint();
+>>>>>>> branch 'master' of https://github.com/AdamChojnackiDrkHml/ChinClient
                     messageLabel.setText("Opponent moved, your turn");
                 } 
                 else if (response.startsWith("MESSAGE")) 
@@ -129,9 +139,10 @@ public class Client
         {
             socket.close();
             frame.dispose();
-        }
+        } */
     }
 
+<<<<<<< HEAD
     static class Square extends JPanel 
     {
         JLabel label = new JLabel();
@@ -150,6 +161,8 @@ public class Client
             label.setText(text + "");
         }
     }
+=======
+>>>>>>> branch 'master' of https://github.com/AdamChojnackiDrkHml/ChinClient
 
     public static void main(String[] args) throws Exception 
     {
@@ -160,7 +173,8 @@ public class Client
         }
         Client client = new Client(args[0]);
         client.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        client.frame.setSize(320, 320);
+        client.frame.setSize(40 * 18, 40 * 19);
+      //  client.frame.revalidate();
         client.frame.setVisible(true);
         client.frame.setResizable(false);
         client.play();
