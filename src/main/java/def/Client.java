@@ -31,12 +31,12 @@ public class Client
 
         messageLabel.setBackground(Color.lightGray);
         frame.getContentPane().add(messageLabel, BorderLayout.SOUTH);
-<<<<<<< HEAD
 
         var boardPanel = new JPanel();
         boardPanel.setBackground(Color.black);
         boardPanel.setLayout(new GridLayout(3, 3, 2, 2));
-        for (var i = 0; i < board.length; i++) {
+        for (var i = 0; i < board.length; i++) 
+        {
             final int j = i;
             board[i] = new Square();
             board[i].addMouseListener(new MouseAdapter() 
@@ -49,11 +49,9 @@ public class Client
             });
             boardPanel.add(board[i]);
         }
-        frame.getContentPane().add(boardPanel, BorderLayout.CENTER);
-=======
         frame.getContentPane().add(new Board(5, 6));
      //   frame.pack();
->>>>>>> branch 'master' of https://github.com/AdamChojnackiDrkHml/ChinClient
+
     }
 
     /**
@@ -65,22 +63,14 @@ public class Client
      * game. If the answer is no, the loop is exited and the server is sent a "QUIT"
      * message.
      */
-<<<<<<< HEAD
+
     public void play() throws Exception 
     {
-        try 
-        {
-            var response = in.nextLine();
-            var mark = response.charAt(8);
-            var opponentMark = mark == 'X' ? 'O' : 'X';
-=======
-    public void play() throws Exception {
   /*      try {
             String response = in.nextLine();
             char mark = response.charAt(8);
             char opponentMark = mark == 'X' ? 'O' : 'X';
->>>>>>> branch 'master' of https://github.com/AdamChojnackiDrkHml/ChinClient
-            frame.setTitle("Tic Tac Toe: Player " + mark);
+            frame.setTitle("Chinese checkers: Player " + mark);
             while (in.hasNextLine()) 
             {
                 response = in.nextLine();
@@ -89,19 +79,12 @@ public class Client
                     messageLabel.setText("Valid move, please wait");
                     currentSquare.setText(mark);
                     currentSquare.repaint();
-<<<<<<< HEAD
                 } 
                 else if (response.startsWith("OPPONENT_MOVED")) 
                 {
-                    var loc = Integer.parseInt(response.substring(15));
-                    board[loc].setText(opponentMark);
-                    board[loc].repaint();
-=======
-                } else if (response.startsWith("OPPONENT_MOVED")) {
                     int loc = Integer.parseInt(response.substring(15));
-               //     board[loc][5].setText(opponentMark);
-                 //   board[loc][5].repaint();
->>>>>>> branch 'master' of https://github.com/AdamChojnackiDrkHml/ChinClient
+                    //board[loc][5].setText(opponentMark);
+                    //board[loc][5].repaint();
                     messageLabel.setText("Opponent moved, your turn");
                 } 
                 else if (response.startsWith("MESSAGE")) 
@@ -142,7 +125,6 @@ public class Client
         } */
     }
 
-<<<<<<< HEAD
     static class Square extends JPanel 
     {
         JLabel label = new JLabel();
@@ -161,8 +143,6 @@ public class Client
             label.setText(text + "");
         }
     }
-=======
->>>>>>> branch 'master' of https://github.com/AdamChojnackiDrkHml/ChinClient
 
     public static void main(String[] args) throws Exception 
     {
