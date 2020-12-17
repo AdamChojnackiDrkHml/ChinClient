@@ -17,19 +17,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
- * A client for a multi-player tic tac toe game. Loosely based on an example in
- * Deitel and Deitel’s “Java How to Program” book. For this project I created a
- * new application-level protocol called TTTP (for Tic Tac Toe Protocol), which
- * is entirely plain text. The messages of TTTP are:
- *
- * Client -> Server MOVE <n> QUIT
- *
- * Server -> Client WELCOME <char> VALID_MOVE OTHER_PLAYER_MOVED <n>
- * OTHER_PLAYER_LEFT VICTORY DEFEAT TIE MESSAGE <text>
+ * A client for a multi-player Chinese checkers toe game.
  */
-public class Client {
+public class Client 
+{
 
-    private JFrame frame = new JFrame("Tic Tac Toe");
+    private JFrame frame = new JFrame("Chinese checkers");
     private JLabel messageLabel = new JLabel("...");
 
     private Square[] board = new Square[9];
@@ -39,7 +32,8 @@ public class Client {
     private Scanner in;
     private PrintWriter out;
 
-    public Client(String serverAddress) throws Exception {
+    public Client(String serverAddress) throws Exception 
+    {
 
         socket = new Socket(serverAddress, 58901);
         in = new Scanner(socket.getInputStream());
@@ -54,8 +48,10 @@ public class Client {
         for (var i = 0; i < board.length; i++) {
             final int j = i;
             board[i] = new Square();
-            board[i].addMouseListener(new MouseAdapter() {
-                public void mousePressed(MouseEvent e) {
+            board[i].addMouseListener(new MouseAdapter() 
+            {
+                public void mousePressed(MouseEvent e) 
+                {
                     currentSquare = board[j];
                     out.println("MOVE " + j);
                 }
@@ -74,66 +70,91 @@ public class Client {
      * game. If the answer is no, the loop is exited and the server is sent a "QUIT"
      * message.
      */
-    public void play() throws Exception {
-        try {
+    public void play() throws Exception 
+    {
+        try 
+        {
             var response = in.nextLine();
             var mark = response.charAt(8);
             var opponentMark = mark == 'X' ? 'O' : 'X';
             frame.setTitle("Tic Tac Toe: Player " + mark);
-            while (in.hasNextLine()) {
+            while (in.hasNextLine()) 
+            {
                 response = in.nextLine();
-                if (response.startsWith("VALID_MOVE")) {
+                if (response.startsWith("VALID_MOVE")) 
+                {
                     messageLabel.setText("Valid move, please wait");
                     currentSquare.setText(mark);
                     currentSquare.repaint();
-                } else if (response.startsWith("OPPONENT_MOVED")) {
+                } 
+                else if (response.startsWith("OPPONENT_MOVED")) 
+                {
                     var loc = Integer.parseInt(response.substring(15));
                     board[loc].setText(opponentMark);
                     board[loc].repaint();
                     messageLabel.setText("Opponent moved, your turn");
-                } else if (response.startsWith("MESSAGE")) {
+                } 
+                else if (response.startsWith("MESSAGE")) 
+                {
                     messageLabel.setText(response.substring(8));
-                } else if (response.startsWith("VICTORY")) {
-                    JOptionPane.showMessageDialog(frame, "Winner Winner");
+                } 
+                else if (response.startsWith("VICTORY")) 
+                {
+                    JOptionPane.showMessageDialog(frame, "Winner");
                     break;
-                } else if (response.startsWith("DEFEAT")) {
+                } 
+                else if (response.startsWith("DEFEAT")) 
+                {
                     JOptionPane.showMessageDialog(frame, "Sorry you lost");
                     break;
-                } else if (response.startsWith("TIE")) {
+                } 
+                else if (response.startsWith("TIE")) 
+                {
                     JOptionPane.showMessageDialog(frame, "Tie");
                     break;
-                } else if (response.startsWith("OTHER_PLAYER_LEFT")) {
+                } 
+                else if (response.startsWith("OTHER_PLAYER_LEFT")) 
+                {
                     JOptionPane.showMessageDialog(frame, "Other player left");
                     break;
                 }
             }
             out.println("QUIT");
-        } catch (Exception e) {
+        } 
+        catch (Exception e) 
+        {
             e.printStackTrace();
-        } finally {
+        } 
+        finally 
+        {
             socket.close();
             frame.dispose();
         }
     }
 
-    static class Square extends JPanel {
+    static class Square extends JPanel 
+    {
         JLabel label = new JLabel();
 
-        public Square() {
+        public Square() 
+        {
             setBackground(Color.white);
             setLayout(new GridBagLayout());
             label.setFont(new Font("Arial", Font.BOLD, 40));
             add(label);
         }
 
-        public void setText(char text) {
+        public void setText(char text) 
+        {
             label.setForeground(text == 'X' ? Color.BLUE : Color.RED);
             label.setText(text + "");
         }
     }
 
-    public static void main(String[] args) throws Exception {
-        if (args.length != 1) {
+    public static void main(String[] args) throws Exception 
+    {
+        if (args.length != 1) 
+        {
             System.err.println("Pass the server IP as the sole command line argument");
             return;
         }
