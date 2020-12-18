@@ -1,6 +1,7 @@
 package def;
 
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class Game
 {
@@ -51,6 +52,26 @@ public class Game
         gameBoard = gamePoolsRules.setUpBoardForPlayers(numOfPlayers, gameBoard);
     }
 
+    public void getMessage(String message)
+    {
+        Scanner scanner = new Scanner(message);
+        try
+        {
+            PlayerId playerMovedId = PlayerId.valueOf(scanner.next());
+            int xBeg = Integer.parseInt(scanner.next());
+            int yBeg = Integer.parseInt(scanner.next());
+            int xDest = Integer.parseInt(scanner.next());
+            int yDest = Integer.parseInt(scanner.next());
+
+            gameBoard[yBeg][xBeg] = PlayerId.ZERO;
+            gameBoard[xDest][yDest] = playerMovedId;
+
+        }
+        catch (NumberFormatException ignored)
+        {
+
+        }
+    }
     public String decide(int[] pos)
     {
         if(!isChosen)

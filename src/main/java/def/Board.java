@@ -21,6 +21,7 @@ public class Board extends JPanel
 
         setUp();
     }
+
     public Color chooseColor(PlayerId id)
     {
         switch (id)
