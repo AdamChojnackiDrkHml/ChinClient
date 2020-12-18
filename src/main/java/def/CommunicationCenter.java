@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class CommunicationCenter
 {
     Board board;
-    PrintWriter out;
+    static PrintWriter out;
     Scanner in;
 
     CommunicationCenter(PrintWriter out, Board board, Scanner in)
@@ -17,7 +17,7 @@ public class CommunicationCenter
       this.in = in;
     }
 
-    void sendMessage(String message)
+    static void sendMessage(String message)
     {
         out.println(message);
     }

@@ -65,7 +65,6 @@ public class Game
 
             gameBoard[yBeg][xBeg] = PlayerId.ZERO;
             gameBoard[xDest][yDest] = playerMovedId;
-
         }
         catch (NumberFormatException ignored)
         {
@@ -106,11 +105,13 @@ public class Game
             }
             else if(gameBoard[pos[0]][pos[1]].equals(PlayerId.ZERO) && gamePoolsRules.isMoveValid(chosen[0], chosen, pos))
             {
-                gameBoard[pos[0]][pos[1]] = playerId;
+            	CommunicationCenter.sendMessage("MOVE");
+            	CommunicationCenter.sendMessage(playerId.name() + " " +  chosen[1] + " " + chosen[0] + " " + pos[1] + " " + pos[0]);
+                System.out.println(playerId.name() + " " +  chosen[1] + " " + chosen[0] + " " + pos[1] + " " + pos[0]);
+            	gameBoard[pos[0]][pos[1]] = playerId;
                 gameBoard[chosen[0]][chosen[1]] = PlayerId.ZERO;
                 chosen = new int[]{0,0};
                 isChosen = false;
-                Client.notifyServer();
                 return "MOVED";
             }
             else

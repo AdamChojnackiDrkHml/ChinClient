@@ -12,19 +12,16 @@ import javax.swing.*;
  */
 public class Client 
 {
-
     private JFrame frame = new JFrame("Chinese checkers");
     private JLabel messageLabel = new JLabel("...");
-
-
     private Socket socket;
     private Scanner in;
-    private PrintWriter out;
+    private static PrintWriter out;
+    CommunicationCenter communicationCenter;
 
     public Client(String serverAddress) throws Exception 
     {
-
-        socket = new Socket(serverAddress, 58900);
+        socket = new Socket(serverAddress, 58902);
         in = new Scanner(socket.getInputStream());
         out = new PrintWriter(socket.getOutputStream(), true);
    //     System.out.println(in.next());
@@ -32,22 +29,15 @@ public class Client
         PlayerId id = PlayerId.valueOf(in.nextLine());
         Game game = new Game(id, numOfPlayers, new StandardGamePools());
         Board board = new Board(game);
-        CommunicationCenter communicationCenter = new CommunicationCenter(out, board, in);
+        communicationCenter = new CommunicationCenter(out, board, in);
         messageLabel.setBackground(Color.lightGray);
         frame.getContentPane().add(messageLabel, BorderLayout.SOUTH);
-
         frame.getContentPane().add(board);
-
-
     }
 
 
     //Dorobiłem tą funkcję i można ją wywołać z klasy GAME, dzięki czemu możemy z GAME kontrolować kiedy wysyłamy coś do servera
     //Czeka tylko na uzupełnienie kontatku z serverem, więc na razie jest zakomentowana
-    public static void notifyServer()
-    {
-        //out.println("DUPA");
-    }
 
     /**
      * The main thread of the client will listen for messages from the server. The
@@ -61,19 +51,21 @@ public class Client
 
     public void play() throws Exception 
     {
-  /*      try {
+        try 
+        {
             String response = in.nextLine();
-            char mark = response.charAt(8);
-            char opponentMark = mark == 'X' ? 'O' : 'X';
-            frame.setTitle("Chinese checkers: Player " + mark);
+            //char mark = response.charAt(8);
+            //char opponentMark = mark == 'X' ? 'O' : 'X';
+            //frame.setTitle("Chinese checkers: Player " + mark);
             while (in.hasNextLine()) 
             {
                 response = in.nextLine();
                 if (response.startsWith("VALID_MOVE")) 
                 {
                     messageLabel.setText("Valid move, please wait");
-                    currentSquare.setText(mark);
-                    currentSquare.repaint();
+                    communicationCenter.interpretMessage();
+                    //currentSquare.setText(mark);
+                    //currentSquare.repaint();
                 } 
                 else if (response.startsWith("OPPONENT_MOVED")) 
                 {
@@ -117,7 +109,7 @@ public class Client
         {
             socket.close();
             frame.dispose();
-        } */
+        }
     }
 
     public static void main(String[] args) throws Exception 
