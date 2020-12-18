@@ -19,10 +19,10 @@ public class StandardGamePools implements PlayerPoolsInterface
     Color[] colorTab = {Color.RED, Color.YELLOW, Color.GREEN, Color.MAGENTA, new Color(240, 100,0), Color.BLUE};
 
     @Override
-    public boolean isMoveValid(int rowNum, Pool originalPosition, Pool desirePosition)
+    public boolean isMoveValid(int rowNum, int[] originalPosition, int[] desirePosition)
     {
-        int moveX = desirePosition.xPos - originalPosition.xPos;
-        int moveY = desirePosition.yPos - originalPosition.yPos;
+        int moveX = desirePosition[1] - originalPosition[1];
+        int moveY = desirePosition[0] - originalPosition[0];
         if(rowNum % 2 == 0)
         {
             for(int[] move : possibleParityMoves)
@@ -46,184 +46,77 @@ public class StandardGamePools implements PlayerPoolsInterface
         return false;
     }
 
-    public Pool[][] setUpperPools(Pool[][] pools)
+    public PlayerId[][] setUpperPools(PlayerId[][] pools)
     {
-        for(Pool[] row : pools)
+        for (int[] cords : UpperPools)
         {
-            for(Pool pool : row)
-            {
-                if(pool != null)
-                {
-                    for (int[] cords : UpperPools)
-                    {
-                        if (pool.xPos == cords[1] && pool.yPos == cords[0])
-                        {
-                            pool.setInsideColor(Color.MAGENTA);
-                        }
-                    }
-                }
-            }
+            pools[cords[0]][cords[1]] = PlayerId.FOUR;
         }
         return pools;
     }
 
-    public Pool[][] setUpperLeftPools(Pool[][] pools)
+    public PlayerId[][] setUpperLeftPools(PlayerId[][] pools)
     {
-        for(Pool[] row : pools)
+        for (int[] cords : UpperLeftPools)
         {
-            for(Pool pool : row)
-            {
-                if(pool != null)
-                {
-                    for (int[] cords : UpperLeftPools)
-                    {
-                        if (pool.xPos == cords[1] && pool.yPos == cords[0])
-                        {
-                            pool.setInsideColor(Color.GREEN);
-                        }
-                    }
-                }
-            }
+            pools[cords[0]][cords[1]] = PlayerId.THREE;
         }
         return pools;
     }
-    public Pool[][] setUpperRightPools(Pool[][] pools)
+    public PlayerId[][] setUpperRightPools(PlayerId[][] pools)
     {
-        for(Pool[] row : pools)
+        for (int[] cords : UpperRightPools)
         {
-            for(Pool pool : row)
-            {
-                if(pool != null)
-                {
-                    for (int[] cords : UpperRightPools)
-                    {
-                        if (pool.xPos == cords[1] && pool.yPos == cords[0])
-                        {
-                            pool.setInsideColor(new Color(240, 100, 0));
-                        }
-                    }
-                }
-            }
+            pools[cords[0]][cords[1]] = PlayerId.FIVE;
         }
         return pools;
     }
-    public Pool[][] setBottomLeftPools(Pool[][] pools)
+    public PlayerId[][] setBottomLeftPools(PlayerId[][] pools)
     {
-        for(Pool[] row : pools)
+        for (int[] cords : BottomLeftPools)
         {
-            for(Pool pool : row)
-            {
-                if(pool != null)
-                {
-                    for (int[] cords : BottomLeftPools)
-                    {
-                        if (pool.xPos == cords[1] && pool.yPos == cords[0])
-                        {
-                            pool.setInsideColor(Color.YELLOW);
-                        }
-                    }
-                }
-            }
+            pools[cords[0]][cords[1]] = PlayerId.TWO;
         }
         return pools;
     }
-    public Pool[][] setBottomRightPools(Pool[][] pools)
+    public PlayerId[][] setBottomRightPools(PlayerId[][] pools)
     {
-        for(Pool[] row : pools)
+        for (int[] cords : BottomRightPools)
         {
-            for(Pool pool : row)
-            {
-                if(pool != null)
-                {
-                    for (int[] cords : BottomRightPools)
-                    {
-                        if (pool.xPos == cords[1] && pool.yPos == cords[0])
-                        {
-                            pool.setInsideColor(Color.BLUE);
-                        }
-                    }
-                }
-            }
+            pools[cords[0]][cords[1]] = PlayerId.SIX;
         }
         return pools;
     }
-    public Pool[][] setBottomPools(Pool[][] pools)
+    public PlayerId[][] setBottomPools(PlayerId[][] pools)
     {
-        for(Pool[] row : pools)
+        for (int[] cords : BottomPools)
         {
-            for(Pool pool : row)
-            {
-                if(pool != null)
-                {
-                    for (int[] cords : BottomPools)
-                    {
-                        if (pool.xPos == cords[1] && pool.yPos == cords[0])
-                        {
-                            pool.setInsideColor(Color.RED);
-                        }
-                    }
-                }
-            }
+            pools[cords[0]][cords[1]] = PlayerId.ONE;
         }
         return pools;
     }
 
-    public Pool[][] setBoardForTwoPlayers(Pool[][] pools)
+    public PlayerId[][] setBoardForTwoPlayers(PlayerId[][] pools)
     {
         return setBottomPools(setUpperPools(pools));
-
     }
 
-    public Pool[][] setBoardForThreePlayers(Pool[][] pools)
+    public PlayerId[][] setBoardForThreePlayers(PlayerId[][] pools)
     {
         return setBottomPools(setUpperLeftPools(setUpperRightPools(pools)));
 
     }
-    public Pool[][] setBoardForFourPlayers(Pool[][] pools)
+    public PlayerId[][] setBoardForFourPlayers(PlayerId[][] pools)
     {
         return setUpperRightPools(setBottomLeftPools(setBoardForTwoPlayers(pools)));
 
     }
-    public Pool[][] setBoardForSixPlayers(Pool[][] pools)
+    public PlayerId[][] setBoardForSixPlayers(PlayerId[][] pools)
     {
         return setBoardForFourPlayers(setUpperLeftPools(setBottomRightPools(pools)));
     }
 
-    public Color chooseColor(PlayerId id)
-    {
-       switch (id)
-       {
-           case ONE:
-           {
-               return Color.RED;
-           }
-           case TWO:
-           {
-               return Color.YELLOW;
-           }
-           case THREE:
-           {
-               return Color.GREEN;
-           }
-           case FOUR:
-           {
-               return Color.MAGENTA;
-           }
-           case FIVE:
-           {
-               return new Color(240, 100,0);
-           }
-           case SIX:
-           {
-               return Color.BLUE;
-           }
-           default:
-           {
-               return Color.GRAY;
-           }
-       }
-    }
-    public Pool[][] setUpBoardForPlayers(NumberOfPlayers numOfPlayers, Pool[][] pools)
+    public PlayerId[][] setUpBoardForPlayers(NumberOfPlayers numOfPlayers, PlayerId[][] pools)
     {
         switch (numOfPlayers)
         {

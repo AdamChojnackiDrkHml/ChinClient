@@ -4,29 +4,57 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Scanner;
 
 
 public class Board extends JPanel
 {
 
-    Pool[][] pools = new Pool[17][17];
-    Pool currentPool;
-    PlayerId playerId;
-    int[] currentPoolIndex = new int[2];
-    boolean isChosen;
-    PlayerPoolsInterface gamePoolsRules;
-    Color playerColor;
-
+    ArrayList<Pool> pools = new ArrayList<>();
+    Game game;
 
     Board(PlayerId id, NumberOfPlayers numOfPlayers, PlayerPoolsInterface gamePoolsRules)
     {
-        this.gamePoolsRules = gamePoolsRules;
-        this.playerId = id;
+        game = new Game(id, numOfPlayers, gamePoolsRules);
 
-        setUp(numOfPlayers);
-
+        setUp();
     }
-
+    public Color chooseColor(PlayerId id)
+    {
+        switch (id)
+        {
+            case ONE:
+            {
+                return Color.RED;
+            }
+            case TWO:
+            {
+                return Color.YELLOW;
+            }
+            case THREE:
+            {
+                return Color.GREEN;
+            }
+            case FOUR:
+            {
+                return Color.MAGENTA;
+            }
+            case FIVE:
+            {
+                return new Color(240, 100,0);
+            }
+            case SIX:
+            {
+                return Color.BLUE;
+            }
+            default:
+            {
+                return Color.GRAY;
+            }
+        }
+    }
 
 
     private void choosePools()
@@ -35,7 +63,7 @@ public class Board extends JPanel
         {
             for(int j = 0; j < 17; j++)
             {
-                if(isThisValidPool(j,i))
+                if(game.gameBoard[i][j] != PlayerId.NULL)
                 {
                     Pool newPool;
                     if(i % 2 == 0)
@@ -46,38 +74,20 @@ public class Board extends JPanel
                     {
                         newPool = new Pool(j * 40 + 20, i * 40 + 10,40, i, j);
                     }
-                    pools[i][j] = newPool;
+                    pools.add(newPool);
                 }
-                else
-                {
-                    pools[i][j] = null;
-                }
+
             }
         }
     }
 
-    void setUp(NumberOfPlayers numOfPlayers)
+    void setUp()
     {
         choosePools();
-        playerColor = gamePoolsRules.chooseColor(playerId);
-        pools = gamePoolsRules.setUpBoardForPlayers(numOfPlayers, pools);
         addMouseListener(MyMouseListener);
         repaint();
     }
 
-    private boolean isThisValidPool(int xCord, int yCord)
-    {
-        return !(((yCord == 13 || yCord == 3) && (xCord > 9 || xCord < 6)) ||
-                ((yCord == 14 || yCord == 2) && (xCord > 9 || xCord < 7)) ||
-                ((yCord == 15 || yCord == 1) && (xCord > 8 || xCord < 7)) ||
-                ((yCord == 16 || yCord == 0) && (xCord != 8)) ||
-                (xCord < 2) ||
-                (xCord > 14) ||
-                (xCord == 2 && (yCord > 5 && yCord < 11 )) ||
-                (xCord == 3 && yCord == 8) ||
-                (xCord == 14 && yCord > 4 && yCord < 12) ||
-                (xCord == 13 && yCord > 6 && yCord < 10));
-    }
 
 
     protected void paintComponent(Graphics g)
@@ -90,18 +100,20 @@ public class Board extends JPanel
         g2d.setPaint(gp);
         g2d.fillRect(0,0,this.getWidth(), this.getHeight());
 
-        for(Pool[] row : pools)
+        for(Pool pool : pools)
         {
-            for(Pool pool : row)
+
+            g2d.setColor(chooseColor(game.gameBoard[pool.yPos][pool.xPos]));
+            g2d.fill(pool.ellipse2D);
+            if(Arrays.equals(game.chosen, new int[]{pool.yPos, pool.xPos}))
             {
-                if (pool != null)
-                {
-                    g2d.setColor(pool.getInsideColor());
-                    g2d.fill(pool.ellipse2D);
-                    g2d.setColor(pool.getBorderColor());
-                    g2d.draw(pool.ellipse2D);
-                }
+                g2d.setColor(Color.WHITE);
             }
+            else
+            {
+                g2d.setColor(Color.black);
+            }
+            g2d.draw(pool.ellipse2D);
         }
 
 
@@ -114,59 +126,26 @@ public class Board extends JPanel
         {
             int x = e.getX();
             int y = e.getY();
-            if(!isChosen)
+            for (Pool pool : pools)
             {
-search:         for(Pool[] row : pools)
+                if(pool.ellipse2D.contains(x,y))
                 {
-                    for (Pool pool : row)
+                    Scanner command = new Scanner(game.decide(new int[]{pool.yPos, pool.xPos}));
+                    if ("INVALID".equals(command.next()))
                     {
-                        if(pool != null)
+                        if (command.next().equals("MOVE"))
                         {
-                            if (pool.ellipse2D.contains(x, y) && pool.getInsideColor().equals(playerColor))
-                            {
-                                pool.setBorderColor(Color.WHITE);
-                                isChosen = true;
-                                currentPoolIndex[0] = pool.yPos;
-                                currentPoolIndex[1] = pool.xPos;
-                                currentPool = pool;
-                                repaint();
-                                break search;
-                            }
+                            System.out.println("INVALID MOVE");
+                        } else
+                        {
+                            System.out.println("INVALID POOL");
                         }
                     }
-                }
-            }
-            else
-            {
-search:         for(Pool[] row : pools)
-                {
-                    for (Pool pool : row)
+                    else
                     {
-                        if(pool != null)
-                        {
-                            if (pool.ellipse2D.contains(x, y))
-                            {
-                                if(pool.xPos == currentPool.xPos && pool.yPos == currentPool.yPos)
-                                {
-                                    pool.setBorderColor(Color.BLACK);
-                                    isChosen = false;
-                                    currentPool = null;
-                                    repaint();
-                                    break search;
-                                }
-                                else if(pool.getInsideColor().equals(Color.GRAY) && gamePoolsRules.isMoveValid(currentPool.yPos, currentPool, pool))
-                                {
-                                    pool.setInsideColor(currentPool.getInsideColor());
-                                    pools[currentPoolIndex[0]][currentPoolIndex[1]].setInsideColor(Color.GRAY);
-                                    pools[currentPoolIndex[0]][currentPoolIndex[1]].setBorderColor(Color.BLACK);
-                                    isChosen = false;
-                                    currentPool = null;
-                                    repaint();
-                                    break search;
-                                }
-                            }
-                        }
+                        repaint();
                     }
+
                 }
             }
         }

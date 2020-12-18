@@ -2,5 +2,5 @@ package def;
 
 public enum PlayerId
 {
-    ONE, TWO, THREE, FOUR, FIVE, SIX;
+    ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, NULL;
 }
