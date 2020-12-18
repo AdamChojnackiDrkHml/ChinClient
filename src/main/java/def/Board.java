@@ -15,9 +15,9 @@ public class Board extends JPanel
     ArrayList<Pool> pools = new ArrayList<>();
     Game game;
 
-    Board(PlayerId id, NumberOfPlayers numOfPlayers, PlayerPoolsInterface gamePoolsRules)
+    Board(Game game)
     {
-        game = new Game(id, numOfPlayers, gamePoolsRules);
+        this.game = game;
 
         setUp();
     }

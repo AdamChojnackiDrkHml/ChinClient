@@ -28,13 +28,21 @@ public class Client
     //    in = new Scanner(socket.getInputStream());
      //   out = new PrintWriter(socket.getOutputStream(), true);
    //     System.out.println(in.next());
-
+        Game game = new Game(PlayerId.FIVE, NumberOfPlayers.THREE, new StandardGamePools());
         messageLabel.setBackground(Color.lightGray);
         frame.getContentPane().add(messageLabel, BorderLayout.SOUTH);
 
-        frame.getContentPane().add(new Board(PlayerId.FIVE, NumberOfPlayers.THREE, new StandardGamePools()));
-     //   frame.pack();
+        frame.getContentPane().add(new Board(game));
 
+
+    }
+
+
+    //Dorobiłem tą funkcję i można ją wywołać z klasy GAME, dzięki czemu możemy z GAME kontrolować kiedy wysyłamy coś do servera
+    //Czeka tylko na uzupełnienie kontatku z serverem, więc na razie jest zakomentowana
+    public static void notifyServer()
+    {
+        //out.println("DUPA");
     }
 
     /**

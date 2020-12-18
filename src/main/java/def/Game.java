@@ -89,6 +89,7 @@ public class Game
                 gameBoard[chosen[0]][chosen[1]] = PlayerId.ZERO;
                 chosen = new int[]{0,0};
                 isChosen = false;
+                Client.notifyServer();
                 return "MOVED";
             }
             else
