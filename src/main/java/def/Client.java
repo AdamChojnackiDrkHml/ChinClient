@@ -30,7 +30,7 @@ public class Client
    //     System.out.println(in.next());
         NumberOfPlayers numOfPlayers = NumberOfPlayers.valueOf(in.nextLine());
         PlayerId id = PlayerId.valueOf(in.nextLine());
-        Game game = new Game(id, NumberOfPlayers.FOUR, new StandardGamePools());
+        Game game = new Game(id, numOfPlayers, new StandardGamePools());
         Board board = new Board(game);
         CommunicationCenter communicationCenter = new CommunicationCenter(out, board, in);
         messageLabel.setBackground(Color.lightGray);
