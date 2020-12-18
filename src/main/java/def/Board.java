@@ -137,7 +137,8 @@ public class Board extends JPanel
                         if (command.next().equals("MOVE"))
                         {
                             System.out.println("INVALID MOVE");
-                        } else
+                        } 
+                        else
                         {
                             System.out.println("INVALID POOL");
                         }
@@ -146,7 +147,7 @@ public class Board extends JPanel
                     {
                         repaint();
                     }
-
+                    break;
                 }
             }
         }

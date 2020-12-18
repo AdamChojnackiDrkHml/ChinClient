@@ -28,7 +28,9 @@ public class Client
         in = new Scanner(socket.getInputStream());
         out = new PrintWriter(socket.getOutputStream(), true);
    //     System.out.println(in.next());
-        Game game = new Game(PlayerId.FIVE, NumberOfPlayers.THREE, new StandardGamePools());
+        NumberOfPlayers numOfPlayers = NumberOfPlayers.valueOf(in.nextLine());
+        PlayerId id = PlayerId.valueOf(in.nextLine());
+        Game game = new Game(id, NumberOfPlayers.FOUR, new StandardGamePools());
         Board board = new Board(game);
         CommunicationCenter communicationCenter = new CommunicationCenter(out, board, in);
         messageLabel.setBackground(Color.lightGray);
