@@ -1,7 +1,5 @@
 package def;
 
-import java.awt.*;
-import java.util.ArrayList;
 
 public class StandardGamePools implements PlayerPoolsInterface
 {
@@ -16,7 +14,6 @@ public class StandardGamePools implements PlayerPoolsInterface
     int[][] possibleParityMoves = {{0, 1},{0, -1},{-1, 0},{-1, -1},{1, -1},{1,0}};
     int[][] possibleOddMoves = {{0,1},{0,-1},{1,1},{1,0},{-1,0},{-1,1}};
 
-    Color[] colorTab = {Color.RED, Color.YELLOW, Color.GREEN, Color.MAGENTA, new Color(240, 100,0), Color.BLUE};
 
     @Override
     public boolean isMoveValid(int rowNum, int[] originalPosition, int[] desirePosition)

@@ -1,7 +1,5 @@
 package def;
 
-import java.awt.*;
-import java.util.ArrayList;
 
 public interface PlayerPoolsInterface
 {
