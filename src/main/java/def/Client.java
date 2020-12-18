@@ -31,7 +31,8 @@ public class Client
 
         messageLabel.setBackground(Color.lightGray);
         frame.getContentPane().add(messageLabel, BorderLayout.SOUTH);
-        frame.getContentPane().add(new Board(5, 4));
+
+        frame.getContentPane().add(new Board(PlayerId.FIVE, NumberOfPlayers.FOUR, new StandardGamePools()));
      //   frame.pack();
 
     }

@@ -18,4 +18,6 @@ public interface PlayerPoolsInterface
     Pool[][] setBoardForThreePlayers(Pool[][] pools);
     Pool[][] setBoardForFourPlayers(Pool[][] pools);
     Pool[][] setBoardForSixPlayers(Pool[][] pools);
+    Color chooseColor(PlayerId id);
+    Pool[][] setUpBoardForPlayers(NumberOfPlayers numOfPlayers, Pool[][] pools);
 }

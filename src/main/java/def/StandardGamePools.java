@@ -16,6 +16,7 @@ public class StandardGamePools implements PlayerPoolsInterface
     int[][] possibleParityMoves = {{0, 1},{0, -1},{-1, 0},{-1, -1},{1, -1},{1,0}};
     int[][] possibleOddMoves = {{0,1},{0,-1},{1,1},{1,0},{-1,0},{-1,1}};
 
+    Color[] colorTab = {Color.RED, Color.YELLOW, Color.GREEN, Color.MAGENTA, new Color(240, 100,0), Color.BLUE};
 
     @Override
     public boolean isMoveValid(int rowNum, Pool originalPosition, Pool desirePosition)
@@ -188,4 +189,64 @@ public class StandardGamePools implements PlayerPoolsInterface
         return setBoardForFourPlayers(setUpperLeftPools(setBottomRightPools(pools)));
     }
 
+    public Color chooseColor(PlayerId id)
+    {
+       switch (id)
+       {
+           case ONE:
+           {
+               return Color.RED;
+           }
+           case TWO:
+           {
+               return Color.YELLOW;
+           }
+           case THREE:
+           {
+               return Color.GREEN;
+           }
+           case FOUR:
+           {
+               return Color.MAGENTA;
+           }
+           case FIVE:
+           {
+               return new Color(240, 100,0);
+           }
+           case SIX:
+           {
+               return Color.BLUE;
+           }
+           default:
+           {
+               return Color.GRAY;
+           }
+       }
+    }
+    public Pool[][] setUpBoardForPlayers(NumberOfPlayers numOfPlayers, Pool[][] pools)
+    {
+        switch (numOfPlayers)
+        {
+            case TWO:
+            {
+                return setBoardForTwoPlayers(pools);
+            }
+            case THREE:
+            {
+                return setBoardForThreePlayers(pools);
+            }
+            case FOUR:
+            {
+                return setBoardForFourPlayers(pools);
+            }
+            case SIX:
+            {
+                return setBoardForSixPlayers(pools);
+            }
+            default:
+            {
+                return setBottomPools(pools);
+            }
+        }
+    }
 }

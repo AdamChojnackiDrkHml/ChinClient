@@ -11,57 +11,23 @@ public class Board extends JPanel
 
     Pool[][] pools = new Pool[17][17];
     Pool currentPool;
+    PlayerId playerId;
     int[] currentPoolIndex = new int[2];
     boolean isChosen;
-    PlayerPoolsInterface gamePoolsRules = new StandardGamePools();
+    PlayerPoolsInterface gamePoolsRules;
     Color playerColor;
 
 
-    Board(int Id, int numOfPlayers)
+    Board(PlayerId id, NumberOfPlayers numOfPlayers, PlayerPoolsInterface gamePoolsRules)
     {
-        choosePools();
-        chooseColor(Id);
-        setUpBoardForPlayers(numOfPlayers);
-        addMouseListener(MyMouseListener);
-        repaint();
+        this.gamePoolsRules = gamePoolsRules;
+        this.playerId = id;
+
+        setUp(numOfPlayers);
+
     }
 
-    private void chooseColor(int id)
-    {
-        switch(id)
-        {
-            case(1):
-            {
-                playerColor = Color.RED;
-                break;
-            }
-            case(2):
-            {
-                playerColor = Color.YELLOW;
-                break;
-            }
-            case(3):
-            {
-                playerColor = Color.GREEN;
-                break;
-            }
-            case(4):
-            {
-                playerColor = Color.MAGENTA;
-                break;
-            }
-            case(5):
-            {
-                playerColor = new Color(240, 100, 0);
-                break;
-            }
-            case(6):
-            {
-                playerColor = Color.BLUE;
-                break;
-            }
-        }
-    }
+
 
     private void choosePools()
     {
@@ -90,24 +56,13 @@ public class Board extends JPanel
         }
     }
 
-    void setUpBoardForPlayers(int numOfPlayers)
+    void setUp(NumberOfPlayers numOfPlayers)
     {
-
-        switch (numOfPlayers)
-        {
-            case 2:
-                pools = gamePoolsRules.setBoardForTwoPlayers(pools);
-                break;
-            case 3:
-                pools = gamePoolsRules.setBoardForThreePlayers(pools);
-                break;
-            case 4:
-                pools = gamePoolsRules.setBoardForFourPlayers(pools);
-                break;
-            case 6:
-                pools = gamePoolsRules.setBoardForSixPlayers(pools);
-                break;
-        }
+        choosePools();
+        playerColor = gamePoolsRules.chooseColor(playerId);
+        pools = gamePoolsRules.setUpBoardForPlayers(numOfPlayers, pools);
+        addMouseListener(MyMouseListener);
+        repaint();
     }
 
     private boolean isThisValidPool(int xCord, int yCord)
@@ -123,6 +78,8 @@ public class Board extends JPanel
                 (xCord == 14 && yCord > 4 && yCord < 12) ||
                 (xCord == 13 && yCord > 6 && yCord < 10));
     }
+
+
     protected void paintComponent(Graphics g)
     {
         super.paintComponent(g);
@@ -197,7 +154,7 @@ search:         for(Pool[] row : pools)
                                     repaint();
                                     break search;
                                 }
-                                else if(gamePoolsRules.isMoveValid(currentPool.yPos, currentPool, pool) && pool.getInsideColor().equals(Color.GRAY))
+                                else if(pool.getInsideColor().equals(Color.GRAY) && gamePoolsRules.isMoveValid(currentPool.yPos, currentPool, pool))
                                 {
                                     pool.setInsideColor(currentPool.getInsideColor());
                                     pools[currentPoolIndex[0]][currentPoolIndex[1]].setInsideColor(Color.GRAY);
