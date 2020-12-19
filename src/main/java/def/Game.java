@@ -64,7 +64,7 @@ public class Game
             int yDest = Integer.parseInt(scanner.next());
 
             gameBoard[yBeg][xBeg] = PlayerId.ZERO;
-            gameBoard[xDest][yDest] = playerMovedId;
+            gameBoard[yDest][xDest] = playerMovedId;
         }
         catch (NumberFormatException ignored)
         {
@@ -107,7 +107,7 @@ public class Game
             {
             	CommunicationCenter.sendMessage("MOVE");
             	CommunicationCenter.sendMessage(playerId.name() + " " +  chosen[1] + " " + chosen[0] + " " + pos[1] + " " + pos[0]);
-                System.out.println(playerId.name() + " " +  chosen[1] + " " + chosen[0] + " " + pos[1] + " " + pos[0]);
+                //System.out.println(playerId.name() + " " +  chosen[1] + " " + chosen[0] + " " + pos[1] + " " + pos[0]);
             	gameBoard[pos[0]][pos[1]] = playerId;
                 gameBoard[chosen[0]][chosen[1]] = PlayerId.ZERO;
                 chosen = new int[]{0,0};
