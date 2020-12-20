@@ -12,7 +12,7 @@ public class CommunicationCenter
 
     CommunicationCenter(PrintWriter out, Board board, Scanner in)
     {
-      this.out = out;
+      CommunicationCenter.out = out;
       this.board = board;
       this.in = in;
     }
@@ -24,7 +24,9 @@ public class CommunicationCenter
 
     void interpretMessage()
     {
-        board.game.getMessage(in.nextLine());
+        String aa = in.nextLine();
+        System.out.println(aa);
+        board.game.getMessage(aa);
         board.repaint();
     }
 }

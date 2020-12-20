@@ -12,32 +12,44 @@ import javax.swing.*;
  */
 public class Client 
 {
+
     private JFrame frame = new JFrame("Chinese checkers");
     private JLabel messageLabel = new JLabel("...");
+
+
     private Socket socket;
     private Scanner in;
-    private static PrintWriter out;
+    private PrintWriter out;
     CommunicationCenter communicationCenter;
+    private PlayerId id;
 
     public Client(String serverAddress) throws Exception 
     {
-        socket = new Socket(serverAddress, 58902);
+
+        socket = new Socket(serverAddress, 58901);
         in = new Scanner(socket.getInputStream());
         out = new PrintWriter(socket.getOutputStream(), true);
-   //     System.out.println(in.next());
-        NumberOfPlayers numOfPlayers = NumberOfPlayers.valueOf(in.nextLine());
-        PlayerId id = PlayerId.valueOf(in.nextLine());
+        String bbb = in.nextLine();
+        System.out.println(bbb);
+        NumberOfPlayers numOfPlayers = NumberOfPlayers.valueOf(bbb);
+        String aaa = in.nextLine();
+        System.out.println(aaa);
+        id = PlayerId.valueOf(aaa);
         Game game = new Game(id, numOfPlayers, new StandardGamePools());
         Board board = new Board(game);
         communicationCenter = new CommunicationCenter(out, board, in);
         messageLabel.setBackground(Color.lightGray);
         frame.getContentPane().add(messageLabel, BorderLayout.SOUTH);
+
         frame.getContentPane().add(board);
+
+
     }
 
 
     //Dorobiłem tą funkcję i można ją wywołać z klasy GAME, dzięki czemu możemy z GAME kontrolować kiedy wysyłamy coś do servera
     //Czeka tylko na uzupełnienie kontatku z serverem, więc na razie jest zakomentowana
+
 
     /**
      * The main thread of the client will listen for messages from the server. The
@@ -51,21 +63,15 @@ public class Client
 
     public void play() throws Exception 
     {
-        try 
-        {
-            String response = in.nextLine();
-            //char mark = response.charAt(8);
-            //char opponentMark = mark == 'X' ? 'O' : 'X';
-            //frame.setTitle("Chinese checkers: Player " + mark);
+        try {
+            frame.setTitle("Chinese checkers: Player " + id.name());
             while (in.hasNextLine()) 
             {
-                response = in.nextLine();
+/*                response = in.nextLine();
                 if (response.startsWith("VALID_MOVE")) 
                 {
                     messageLabel.setText("Valid move, please wait");
-                    communicationCenter.interpretMessage();
-                    //currentSquare.setText(mark);
-                    //currentSquare.repaint();
+
                 } 
                 else if (response.startsWith("OPPONENT_MOVED")) 
                 {
@@ -97,7 +103,8 @@ public class Client
                 {
                     JOptionPane.showMessageDialog(frame, "Other player left");
                     break;
-                }
+                }*/
+                communicationCenter.interpretMessage();
             }
             out.println("QUIT");
         } 
