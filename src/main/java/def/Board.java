@@ -15,7 +15,7 @@ public class Board extends JPanel
     ArrayList<Pool> pools = new ArrayList<>();
     Game game;
 
-    Board(Game game)
+    public Board(Game game)
     {
         this.game = game;
 

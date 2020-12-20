@@ -13,7 +13,7 @@ public class Game
 
 
 
-   Game(PlayerId id, NumberOfPlayers numOfPlayers, PlayerPoolsInterface gamePoolsRules)
+   public Game(PlayerId id, NumberOfPlayers numOfPlayers, PlayerPoolsInterface gamePoolsRules)
    {
        this.gamePoolsRules = gamePoolsRules;
        this.playerId = id;
