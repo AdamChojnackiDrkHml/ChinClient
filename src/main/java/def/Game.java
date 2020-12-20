@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class Game
 {
-   PlayerId[][] gameBoard = new PlayerId[17][17];
+   private PlayerId[][] gameBoard = new PlayerId[17][17];
    int[] chosen = new int[2];
    boolean isChosen = false;
    PlayerPoolsInterface gamePoolsRules;
@@ -119,5 +119,10 @@ public class Game
                 return "INVALID MOVE";
             }
         }
+    }
+
+    public PlayerId[][] getGameBoard()
+    {
+        return gameBoard;
     }
 }

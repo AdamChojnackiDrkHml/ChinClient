@@ -12,8 +12,8 @@ import java.util.Scanner;
 public class Board extends JPanel
 {
 
-    ArrayList<Pool> pools = new ArrayList<>();
-    Game game;
+    private final ArrayList<Pool> pools = new ArrayList<>();
+    private final Game game;
 
     public Board(Game game)
     {
@@ -64,7 +64,7 @@ public class Board extends JPanel
         {
             for(int j = 0; j < 17; j++)
             {
-                if(game.gameBoard[i][j] != PlayerId.NULL)
+                if(game.getGameBoard()[i][j] != PlayerId.NULL)
                 {
                     Pool newPool;
                     if(i % 2 == 0)
@@ -104,9 +104,9 @@ public class Board extends JPanel
         for(Pool pool : pools)
         {
 
-            g2d.setColor(chooseColor(game.gameBoard[pool.yPos][pool.xPos]));
+            g2d.setColor(chooseColor(game.getGameBoard()[pool.getyPos()][pool.getxPos()]));
             g2d.fill(pool.ellipse2D);
-            if(Arrays.equals(game.chosen, new int[]{pool.yPos, pool.xPos}))
+            if(Arrays.equals(game.chosen, new int[]{pool.getyPos(), pool.getxPos()}))
             {
                 g2d.setColor(Color.WHITE);
             }
@@ -127,29 +127,43 @@ public class Board extends JPanel
         {
             int x = e.getX();
             int y = e.getY();
-            for (Pool pool : pools)
+            contactWithGame(x, y);
+        }
+    };
+
+    public void contactWithGame(int x, int y)
+    {
+        for (Pool pool : pools)
+        {
+            if(pool.ellipse2D.contains(x,y))
             {
-                if(pool.ellipse2D.contains(x,y))
+                Scanner command = new Scanner(game.decide(new int[]{pool.getyPos(), pool.getxPos()}));
+                if ("INVALID".equals(command.next()))
                 {
-                    Scanner command = new Scanner(game.decide(new int[]{pool.yPos, pool.xPos}));
-                    if ("INVALID".equals(command.next()))
+                    if (command.next().equals("MOVE"))
                     {
-                        if (command.next().equals("MOVE"))
-                        {
-                            System.out.println("INVALID MOVE");
-                        } 
-                        else
-                        {
-                            System.out.println("INVALID POOL");
-                        }
+                        System.out.println("INVALID MOVE");
                     }
                     else
                     {
-                        repaint();
+                        System.out.println("INVALID POOL");
                     }
-                    break;
                 }
+                else
+                {
+                    repaint();
+                }
+                break;
             }
         }
-    };
+    }
+    public Game getGame()
+    {
+        return this.game;
+    }
+
+    public ArrayList<Pool> getPools()
+    {
+        return pools;
+    }
 }

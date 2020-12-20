@@ -26,7 +26,7 @@ public class CommunicationCenter
     {
         String aa = in.nextLine();
         System.out.println(aa);
-        board.game.getMessage(aa);
+        board.getGame().getMessage(aa);
         board.repaint();
     }
 }

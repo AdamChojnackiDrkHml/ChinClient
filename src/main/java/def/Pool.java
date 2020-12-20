@@ -7,37 +7,23 @@ import java.awt.geom.Ellipse2D;
 public class Pool
 {
     Ellipse2D ellipse2D;
-    int xPos;
-    int yPos;
-    private Color borderColor;
-    private Color insideColor;
+    private final int xPos;
+    private final int yPos;
+
     Pool(double xCord, double yCord, double size, int i, int j)
     {
         ellipse2D = new Ellipse2D.Double(xCord, yCord, size, size);
-        borderColor = Color.BLACK;
-        insideColor = Color.GRAY;
         xPos = j;
         yPos = i;
-
     }
 
-    public Color getBorderColor()
+    public int getxPos()
     {
-        return borderColor;
+        return xPos;
     }
 
-    public void setBorderColor(Color borderColor)
+    public int getyPos()
     {
-        this.borderColor = borderColor;
-    }
-
-    public Color getInsideColor()
-    {
-        return insideColor;
-    }
-
-    public void setInsideColor(Color insideColor)
-    {
-        this.insideColor = insideColor;
+        return yPos;
     }
 }
