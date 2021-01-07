@@ -127,32 +127,24 @@ public class Board extends JPanel
         {
             int x = e.getX();
             int y = e.getY();
-            contactWithGame(x, y);
+            try
+            {
+                contactWithGame(x, y);
+            } catch (IncorrectFieldException incorrectFieldException)
+            {
+                System.out.println(incorrectFieldException.getMessage());
+            }
         }
     };
 
-    public void contactWithGame(int x, int y)
+    public void contactWithGame(int x, int y) throws IncorrectFieldException
     {
         for (Pool pool : pools)
         {
             if(pool.ellipse2D.contains(x,y))
             {
-                Scanner command = new Scanner(game.decide(new int[]{pool.getyPos(), pool.getxPos()}));
-                if ("INVALID".equals(command.next()))
-                {
-                    if (command.next().equals("MOVE"))
-                    {
-                        System.out.println("INVALID MOVE");
-                    }
-                    else
-                    {
-                        System.out.println("INVALID POOL");
-                    }
-                }
-                else
-                {
-                    repaint();
-                }
+                game.decide(new int[]{pool.getyPos(), pool.getxPos()});
+                repaint();
                 break;
             }
         }

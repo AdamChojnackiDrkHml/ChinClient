@@ -121,6 +121,7 @@ public class Client
 
     public static void main(String[] args) throws Exception 
     {
+        int i = 19 / 2;
         if (args.length != 1) 
         {
             System.err.println("Pass the server IP as the sole command line argument");

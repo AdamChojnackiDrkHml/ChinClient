@@ -71,7 +71,7 @@ public class Game
 
         }
     }
-    public String decide(int[] pos)
+    public void decide(int[] pos) throws IncorrectFieldException
     {
         if(!isChosen)
         {
@@ -79,11 +79,10 @@ public class Game
             {
                 chosen = pos;
                 isChosen = true;
-                return "CHOSEN";
             }
             else
             {
-                return "INVALID POOL";
+                throw new IncorrectFieldException("INVALID POOL");
             }
         }
         else
@@ -94,29 +93,25 @@ public class Game
                 {
                     isChosen = false;
                     chosen = new int[]{0, 0};
-                    return "UNCHOOSEN";
                 }
                 else
                 {
                     chosen = pos;
-                    isChosen = true;
-                    return "CHOSEN";
                 }
             }
-            else if(gameBoard[pos[0]][pos[1]].equals(PlayerId.ZERO) && gamePoolsRules.isMoveValid(chosen[0], chosen, pos))
+            else if(gameBoard[pos[0]][pos[1]].equals(PlayerId.ZERO) && gamePoolsRules.isMoveValid(chosen[0], chosen, pos)
+                || gameBoard[pos[0]][pos[1]].equals(PlayerId.ZERO) && gamePoolsRules.isJumpValid(chosen, pos) && gamePoolsRules.jumpCondition(gameBoard, chosen, pos))
             {
             	CommunicationCenter.sendMessage("MOVE");
             	CommunicationCenter.sendMessage(playerId.name() + " " +  chosen[1] + " " + chosen[0] + " " + pos[1] + " " + pos[0]);
-                //System.out.println(playerId.name() + " " +  chosen[1] + " " + chosen[0] + " " + pos[1] + " " + pos[0]);
             	gameBoard[pos[0]][pos[1]] = playerId;
                 gameBoard[chosen[0]][chosen[1]] = PlayerId.ZERO;
                 chosen = new int[]{0,0};
                 isChosen = false;
-                return "MOVED";
             }
             else
             {
-                return "INVALID MOVE";
+                throw new IncorrectFieldException("INVALID MOVE");
             }
         }
     }

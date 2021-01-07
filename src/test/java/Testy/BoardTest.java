@@ -26,14 +26,15 @@ public class BoardTest
         assertEquals(board.getPools().get(0).getxPos(), 8);
         assertNotEquals(board.getPools().get(0).getxPos(), 1);
         assertNotEquals(board.getPools().get(0).getyPos(), 5);
-
     }
 
-    @Test
-    public void testContactWithGame()
+   /* @Test
+    public void testContactWithGame() throws IncorrectFieldException
     {
         Board board = new Board(new Game(PlayerId.ONE, NumberOfPlayers.THREE, new StandardGamePools()));
-        PlayerId[][] prevBoard;
-        assertThrows()
-    }
+        Exception exception = assertThrows(IncorrectFieldException.class, () ->board.contactWithGame(8,0));
+        String expectedMessage = "INVALID MOVE";
+        String actualMessage = exception.getMessage();
+        assertEquals(expectedMessage, actualMessage);
+    } */
 }

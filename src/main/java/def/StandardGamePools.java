@@ -14,6 +14,8 @@ public class StandardGamePools implements PlayerPoolsInterface
     int[][] possibleParityMoves = {{0, 1},{0, -1},{-1, 0},{-1, -1},{1, -1},{1,0}};
     int[][] possibleOddMoves = {{0,1},{0,-1},{1,1},{1,0},{-1,0},{-1,1}};
 
+    int[][] possibleJumps = { {2, 1}, {2, -1}, {-2, 1}, {-2, -1}, {0,2}, {0,-2}};
+
 
     @Override
     public boolean isMoveValid(int rowNum, int[] originalPosition, int[] desirePosition)
@@ -43,6 +45,73 @@ public class StandardGamePools implements PlayerPoolsInterface
         return false;
     }
 
+    @Override
+    public boolean isJumpValid(int[] originalPosition, int[] desirePosition)
+    {
+        int moveX = desirePosition[1] - originalPosition[1];
+        int moveY = desirePosition[0] - originalPosition[0];
+        int[] direction = new int[2];
+        if(moveX > 0)
+        {
+            if(moveY > 0)
+            {
+                direction = possibleJumps[0];
+
+            }
+            else if(moveY < 0)
+            {
+                direction = possibleJumps[2];
+            }
+            else
+            {
+                direction = possibleJumps[4];
+            }
+        }
+        else if(moveX < 0)
+        {
+            if(moveY > 0)
+            {
+                direction = possibleJumps[1];
+
+            }
+            else if(moveY < 0)
+            {
+                direction = possibleJumps[3];
+            }
+            else
+            {
+                direction = possibleJumps[5];
+            }
+        }
+
+
+        for(int i = 0; i < 14; i++)
+        {
+
+            if(direction[0] * i == moveY && direction[1] * i == moveX)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean jumpCondition(PlayerId[][] board, int[] originalPosition, int[] desirePosition)
+    {
+        if (originalPosition[0] % 2 != desirePosition[0] % 2)
+            return false;
+        int yCord = (originalPosition[0] + desirePosition[0]) / 2;
+        int xCord = (originalPosition[1] + desirePosition[1]) / 2;
+        if (originalPosition[0] % 2 == 1 && (originalPosition[1] + desirePosition[1]) % 2 == 1)
+        {
+            xCord++;
+        }
+        PlayerId check = board[yCord][xCord];
+        boolean one = check.equals(PlayerId.NULL);
+        boolean two = check.equals(PlayerId.ZERO);
+        return !(one || two);
+    }
     public PlayerId[][] setUpperPools(PlayerId[][] pools)
     {
         for (int[] cords : UpperPools)

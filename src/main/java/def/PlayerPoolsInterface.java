@@ -4,6 +4,8 @@ package def;
 public interface PlayerPoolsInterface
 {
     boolean isMoveValid(int rowNum, int[] originalPosition, int[] desirePosition);
+    boolean isJumpValid(int[] originalPosition, int[] desirePosition);
+    boolean jumpCondition(PlayerId[][] board, int[] originalPosition, int[] desirePosition );
     PlayerId[][] setUpperPools(PlayerId[][] pools);
     PlayerId[][] setUpperLeftPools(PlayerId[][] pools);
     PlayerId[][] setUpperRightPools(PlayerId[][] pools);
