@@ -40,20 +40,17 @@ public class Client implements ActionListener
         id = PlayerId.valueOf(aaa);
         Game game = new Game(id, numOfPlayers, new StandardGamePools());
         board = new Board(game);
-        if (in.hasNextLine())
+        if (id.equals(PlayerId.valueOf(bbb)))
         {
-        	String ccc = in.nextLine();
-        	game.isItMyTurn = true;
-        }
+       		out.println("YOUR_MOVE");
+       	}
         communicationCenter = new CommunicationCenter(out, board, in);
         messageLabel.setBackground(Color.lightGray);
         frame.getContentPane().add(messageLabel, BorderLayout.NORTH);
-
         frame.getContentPane().add(board);
         endTurn = new JButton("End turn");
         endTurn.addActionListener(this);
         frame.getContentPane().add(endTurn, BorderLayout.SOUTH);
-
     }
 
 
@@ -78,22 +75,7 @@ public class Client implements ActionListener
             while (in.hasNextLine()) 
             {
 /*                response = in.nextLine();
-                if (response.startsWith("VALID_MOVE")) 
-                {
-                    messageLabel.setText("Valid move, please wait");
 
-                } 
-                else if (response.startsWith("OPPONENT_MOVED")) 
-                {
-                    int loc = Integer.parseInt(response.substring(15));
-                    //board[loc][5].setText(opponentMark);
-                    //board[loc][5].repaint();
-                    messageLabel.setText("Opponent moved, your turn");
-                } 
-                else if (response.startsWith("MESSAGE")) 
-                {
-                    messageLabel.setText(response.substring(8));
-                } 
                 else if (response.startsWith("VICTORY")) 
                 {
                     JOptionPane.showMessageDialog(frame, "Winner");
@@ -102,11 +84,6 @@ public class Client implements ActionListener
                 else if (response.startsWith("DEFEAT")) 
                 {
                     JOptionPane.showMessageDialog(frame, "Sorry you lost");
-                    break;
-                } 
-                else if (response.startsWith("TIE")) 
-                {
-                    JOptionPane.showMessageDialog(frame, "Tie");
                     break;
                 } 
                 else if (response.startsWith("OTHER_PLAYER_LEFT")) 
@@ -131,7 +108,6 @@ public class Client implements ActionListener
 
     public static void main(String[] args) throws Exception 
     {
-        int i = 19 / 2;
         if (args.length != 1) 
         {
             System.err.println("Pass the server IP as the sole command line argument");
@@ -140,7 +116,6 @@ public class Client implements ActionListener
         Client client = new Client(args[0]);
         client.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         client.frame.setSize(40 * 18, 40 * 20);
-      //  client.frame.revalidate();
         client.frame.setVisible(true);
         client.frame.setResizable(false);
         client.play();
