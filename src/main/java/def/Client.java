@@ -40,12 +40,17 @@ public class Client implements ActionListener
         id = PlayerId.valueOf(aaa);
         Game game = new Game(id, numOfPlayers, new StandardGamePools());
         board = new Board(game);
+        if (in.hasNextLine())
+        {
+        	String ccc = in.nextLine();
+        	game.isItMyTurn = true;
+        }
         communicationCenter = new CommunicationCenter(out, board, in);
         messageLabel.setBackground(Color.lightGray);
         frame.getContentPane().add(messageLabel, BorderLayout.NORTH);
 
         frame.getContentPane().add(board);
-        endTurn = new JButton("Zakończ");
+        endTurn = new JButton("End turn");
         endTurn.addActionListener(this);
         frame.getContentPane().add(endTurn, BorderLayout.SOUTH);
 

@@ -10,7 +10,7 @@ public class Game
    boolean isChosen = false;
    PlayerPoolsInterface gamePoolsRules;
    PlayerId playerId;
-   private boolean isItMyTurn = true;
+   public boolean isItMyTurn = false;
    private boolean isJumping = false;
 
 
