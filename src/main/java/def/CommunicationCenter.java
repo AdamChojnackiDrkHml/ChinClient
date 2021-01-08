@@ -17,11 +17,14 @@ public class CommunicationCenter
       this.in = in;
     }
 
-    static void sendMessage(String message)
+    static void signalizeMove(String message)
     {
         out.println(message);
     }
-
+    static void signalizeEnd(PlayerId id)
+    {
+        out.println("END " + id.name());
+    }
     void interpretMessage()
     {
         String aa = in.nextLine();

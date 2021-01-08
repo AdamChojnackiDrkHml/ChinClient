@@ -1,6 +1,8 @@
 package def;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Scanner;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -10,18 +12,19 @@ import javax.swing.*;
 /**
  * A client for a multi-player Chinese checkers toe game.
  */
-public class Client 
+public class Client implements ActionListener
 {
 
     private JFrame frame = new JFrame("Chinese checkers");
     private JLabel messageLabel = new JLabel("...");
-
+    private Board board;
 
     private Socket socket;
     private Scanner in;
     private PrintWriter out;
     CommunicationCenter communicationCenter;
     private PlayerId id;
+    private JButton endTurn;
 
     public Client(String serverAddress) throws Exception 
     {
@@ -36,13 +39,15 @@ public class Client
         System.out.println(aaa);
         id = PlayerId.valueOf(aaa);
         Game game = new Game(id, numOfPlayers, new StandardGamePools());
-        Board board = new Board(game);
+        board = new Board(game);
         communicationCenter = new CommunicationCenter(out, board, in);
         messageLabel.setBackground(Color.lightGray);
-        frame.getContentPane().add(messageLabel, BorderLayout.SOUTH);
+        frame.getContentPane().add(messageLabel, BorderLayout.NORTH);
 
         frame.getContentPane().add(board);
-
+        endTurn = new JButton("Zakończ");
+        endTurn.addActionListener(this);
+        frame.getContentPane().add(endTurn, BorderLayout.SOUTH);
 
     }
 
@@ -129,10 +134,21 @@ public class Client
         }
         Client client = new Client(args[0]);
         client.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        client.frame.setSize(40 * 18, 40 * 19);
+        client.frame.setSize(40 * 18, 40 * 20);
       //  client.frame.revalidate();
         client.frame.setVisible(true);
         client.frame.setResizable(false);
         client.play();
+    }
+
+    public void actionPerformed(ActionEvent e)
+    {
+        Object source = e.getSource();
+        if(source.equals(endTurn))
+        {
+            board.getGame().endTurn();
+            board.repaint();
+            CommunicationCenter.signalizeEnd(id);
+        }
     }
 }
