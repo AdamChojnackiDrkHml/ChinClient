@@ -104,12 +104,8 @@ public class Client implements ActionListener
                     {
                         sleep(1);
                     }
-                    messageLabel.setText("Other player's turn");
                 }
-                else
-                {
-                    messageLabel.setText("Other player's turn");
-                }
+                messageLabel.setText("Other player's turn");
 
             }
             CommunicationCenter.signalizeQuit(id);
