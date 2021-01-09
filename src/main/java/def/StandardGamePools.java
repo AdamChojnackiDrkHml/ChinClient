@@ -13,8 +13,8 @@ public class StandardGamePools implements PlayerPoolsInterface
     int[][] BottomPools = {{16,8}, {15,7}, {15,8}, {14,7}, {14,8}, {14,9}, {13,6}, {13,7}, {13,8}, {13,9}};
     int[][][] pools = {BottomPools, BottomLeftPools, UpperLeftPools, UpperPools, UpperRightPools, BottomRightPools};
 
-    int[][] possibleParityMoves = {{0, 1},{0, -1},{-1, 0},{-1, -1},{1, -1},{1,0}};
-    int[][] possibleOddMoves = {{0,1},{0,-1},{1,1},{1,0},{-1,0},{-1,1}};
+    int[][] possibleParityMoves = {{1, 0},{1,-1},{-1, 0},{-1, -1},{0, 1},{0, -1}};
+    int[][] possibleOddMoves = {{1,1},{1,0},{-1,1},{-1,0}, {0,1},{0,-1}};
 
     int[][] possibleJumps = { {2, 1}, {2, -1}, {-2, 1}, {-2, -1}, {0,2}, {0,-2}};
 
@@ -23,31 +23,10 @@ public class StandardGamePools implements PlayerPoolsInterface
     public boolean checkIfInEnemyBase(int[] originalPosition, int[] desirePosition, PlayerId id)
     {
         int[][] base;
-        int enemyId = 0;
+        int enemyId = (PlayerId.getInt(id) + 2) % 6;
         boolean isOriginInBase = false;
         boolean isDestInBase = false;
-        switch(id)
-        {
-            case ONE:
-                enemyId = 4;
-                break;
-            case TWO:
-                enemyId = 5;
-                break;
-            case THREE:
-                enemyId = 6;
-                break;
-            case FOUR:
-                enemyId = 1;
-                break;
-            case FIVE:
-                enemyId = 2;
-                break;
-            case SIX:
-                enemyId = 3;
-                break;
-        }
-        enemyId -= 1;
+
         for(int i = 0; i < 10; i++)
         {
             if(pools[enemyId][i][0] == originalPosition[0] && pools[enemyId][i][1] == originalPosition[1])
@@ -102,40 +81,7 @@ public class StandardGamePools implements PlayerPoolsInterface
         }
         int moveX = desirePosition[1] - originalPosition[1];
         int moveY = desirePosition[0] - originalPosition[0];
-        int[] direction = new int[2];
-        if(moveX > 0)
-        {
-            if(moveY > 0)
-            {
-                direction = possibleJumps[0];
-
-            }
-            else if(moveY < 0)
-            {
-                direction = possibleJumps[2];
-            }
-            else
-            {
-                direction = possibleJumps[4];
-            }
-        }
-        else if(moveX < 0)
-        {
-            if(moveY > 0)
-            {
-                direction = possibleJumps[1];
-
-            }
-            else if(moveY < 0)
-            {
-                direction = possibleJumps[3];
-            }
-            else
-            {
-                direction = possibleJumps[5];
-            }
-        }
-
+        int[] direction = possibleJumps[getDirection(moveX, moveY)];
 
         for(int i = 0; i < 14; i++)
         {
@@ -149,6 +95,42 @@ public class StandardGamePools implements PlayerPoolsInterface
     }
 
     @Override
+    public boolean jumpCondition(PlayerId[][] board, int[] originalPosition, int[] desirePosition, int[] previousJumpPos)
+    {
+        int direction = getDirection(desirePosition[1] - originalPosition[1], desirePosition[0] - originalPosition[0]);
+        if(Arrays.equals(previousJumpPos, desirePosition))
+            return false;
+        if (originalPosition[0] % 2 != desirePosition[0] % 2)
+            return false;
+        int[] parityDirection = possibleParityMoves[direction];
+        int[] oddDirection = possibleOddMoves[direction];
+        int counter = 0;
+        int xCord = originalPosition[1];
+        int yCord = originalPosition[0];
+        PlayerId check;
+        for(int i = 0; i < 14; i++)
+        {
+            if(yCord % 2 == 0)
+            {
+                yCord += parityDirection[0];
+                xCord += parityDirection[1];
+            }
+            else
+            {
+                yCord += oddDirection[0];
+                xCord += oddDirection[1];
+            }
+            check = board[yCord][xCord];
+            if(!check.equals(PlayerId.ZERO))
+            {
+                counter++;
+            }
+            if(desirePosition[0] == yCord && desirePosition[1] == xCord)
+                break;
+        }
+        return counter == 1;
+    }
+ /*   @Override
     public boolean jumpCondition(PlayerId[][] board, int[] originalPosition, int[] desirePosition, int[] previousJumpPos)
     {
         if(Arrays.equals(previousJumpPos, desirePosition))
@@ -165,7 +147,7 @@ public class StandardGamePools implements PlayerPoolsInterface
         boolean one = check.equals(PlayerId.NULL);
         boolean two = check.equals(PlayerId.ZERO);
         return !(one || two);
-    }
+    } */
     public PlayerId[][] setUpperPools(PlayerId[][] pools)
     {
         for (int[] cords : UpperPools)
@@ -261,5 +243,42 @@ public class StandardGamePools implements PlayerPoolsInterface
                 return setBottomPools(pools);
             }
         }
+    }
+
+    private int getDirection(int moveX, int moveY)
+    {
+        if(moveX > 0)
+        {
+            if(moveY > 0)
+            {
+                return 0;
+
+            }
+            else if(moveY < 0)
+            {
+                return 2;
+            }
+            else
+            {
+                return 4;
+            }
+        }
+        else if(moveX < 0)
+        {
+            if(moveY > 0)
+            {
+                return 1;
+
+            }
+            else if(moveY < 0)
+            {
+                return 3;
+            }
+            else
+            {
+                return 5;
+            }
+        }
+        return 0;
     }
 }

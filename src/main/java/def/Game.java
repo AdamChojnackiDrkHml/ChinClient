@@ -141,6 +141,7 @@ public class Game
                 {
                     throw new IncorrectFieldException("INVALID MOVE");
                 }
+
             }
         }
     }
@@ -151,14 +152,16 @@ public class Game
     }
     public void endTurn()
     {
+
         if(isItMyTurn)
         {
-            CommunicationCenter.signalizeEnd(playerId);
+            System.out.println("ALERT");
             chosen = new int[]{0, 0};
             prevJumpPos = new int[]{0,0};
             isChosen = false;
             isJumping = false;
             isItMyTurn = false;
+            CommunicationCenter.signalizeEnd(playerId);
         }
     }
 
