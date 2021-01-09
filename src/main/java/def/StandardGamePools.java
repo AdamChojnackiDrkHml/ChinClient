@@ -98,56 +98,63 @@ public class StandardGamePools implements PlayerPoolsInterface
     public boolean jumpCondition(PlayerId[][] board, int[] originalPosition, int[] desirePosition, int[] previousJumpPos)
     {
         int direction = getDirection(desirePosition[1] - originalPosition[1], desirePosition[0] - originalPosition[0]);
-        if(Arrays.equals(previousJumpPos, desirePosition))
+        if (Arrays.equals(previousJumpPos, desirePosition))
             return false;
         if (originalPosition[0] % 2 != desirePosition[0] % 2)
             return false;
         int[] parityDirection = possibleParityMoves[direction];
         int[] oddDirection = possibleOddMoves[direction];
         int counter = 0;
+        int distance = 0;
         int xCord = originalPosition[1];
         int yCord = originalPosition[0];
         PlayerId check;
-        for(int i = 0; i < 14; i++)
+        for (int i = 0; i < 14; i++)
         {
-            if(yCord % 2 == 0)
+            if (yCord % 2 == 0)
             {
                 yCord += parityDirection[0];
                 xCord += parityDirection[1];
-            }
-            else
+            } else
             {
                 yCord += oddDirection[0];
                 xCord += oddDirection[1];
             }
             check = board[yCord][xCord];
-            if(!check.equals(PlayerId.ZERO))
+            if(check.equals(PlayerId.NULL))
+            {
+                return false;
+            }
+            if (!check.equals(PlayerId.ZERO))
             {
                 counter++;
             }
-            if(desirePosition[0] == yCord && desirePosition[1] == xCord)
+            distance++;
+            if (desirePosition[0] == yCord && desirePosition[1] == xCord)
                 break;
         }
-        return counter == 1;
-    }
- /*   @Override
-    public boolean jumpCondition(PlayerId[][] board, int[] originalPosition, int[] desirePosition, int[] previousJumpPos)
-    {
-        if(Arrays.equals(previousJumpPos, desirePosition))
-            return false;
-        if (originalPosition[0] % 2 != desirePosition[0] % 2)
-            return false;
-        int yCord = (originalPosition[0] + desirePosition[0]) / 2;
-        int xCord = (originalPosition[1] + desirePosition[1]) / 2;
-        if (originalPosition[0] % 2 == 1 && (originalPosition[1] + desirePosition[1]) % 2 == 1)
+        if(counter != 1)
         {
-            xCord++;
+            return false;
         }
-        PlayerId check = board[yCord][xCord];
-        boolean one = check.equals(PlayerId.NULL);
-        boolean two = check.equals(PlayerId.ZERO);
-        return !(one || two);
-    } */
+        xCord = originalPosition[1];
+        yCord = originalPosition[0];
+        for (int i = 0; i < (distance / 2); i++)
+        {
+            if (yCord % 2 == 0)
+            {
+                yCord += parityDirection[0];
+                xCord += parityDirection[1];
+            } else
+            {
+                yCord += oddDirection[0];
+                xCord += oddDirection[1];
+            }
+        }
+        check = board[yCord][xCord];
+        return (!check.equals(PlayerId.ZERO));
+
+    }
     public PlayerId[][] setUpperPools(PlayerId[][] pools)
     {
         for (int[] cords : UpperPools)
