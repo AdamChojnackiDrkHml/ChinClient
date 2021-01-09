@@ -3,9 +3,10 @@ package def;
 
 public interface PlayerPoolsInterface
 {
-    boolean isMoveValid(int rowNum, int[] originalPosition, int[] desirePosition);
-    boolean isJumpValid(int[] originalPosition, int[] desirePosition);
-    boolean jumpCondition(PlayerId[][] board, int[] originalPosition, int[] desirePosition );
+    boolean checkIfInEnemyBase(int[] originalPosition, int[] desirePosition, PlayerId id);
+    boolean isMoveValid(int rowNum, int[] originalPosition, int[] desirePosition, PlayerId id);
+    boolean isJumpValid(int[] originalPosition, int[] desirePosition, PlayerId id);
+    boolean jumpCondition(PlayerId[][] board, int[] originalPosition, int[] desirePosition, int[] previousJumpPos );
     PlayerId[][] setUpperPools(PlayerId[][] pools);
     PlayerId[][] setUpperLeftPools(PlayerId[][] pools);
     PlayerId[][] setUpperRightPools(PlayerId[][] pools);

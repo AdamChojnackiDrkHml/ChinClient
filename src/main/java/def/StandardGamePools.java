@@ -1,6 +1,8 @@
 package def;
 
 
+import java.util.Arrays;
+
 public class StandardGamePools implements PlayerPoolsInterface
 {
     int[][] UpperPools = {{0,8}, {1,7}, {1,8}, {2,7}, {2,8}, {2,9}, {3,6}, {3,7}, {3,8}, {3,9}};
@@ -9,7 +11,7 @@ public class StandardGamePools implements PlayerPoolsInterface
     int[][] BottomLeftPools = {{9,3}, {10,3}, {10,4}, {11,2}, {11,3}, {11,4}, {12,2}, {12,3}, {12,4}, {12,5}};
     int[][] BottomRightPools = {{12,11}, {12,12}, {12,13}, {12,14}, {11,11}, {11,12}, {11,13}, {10,12}, {10,13}, {9,12}};
     int[][] BottomPools = {{16,8}, {15,7}, {15,8}, {14,7}, {14,8}, {14,9}, {13,6}, {13,7}, {13,8}, {13,9}};
-
+    int[][][] pools = {BottomPools, BottomLeftPools, UpperLeftPools, UpperPools, UpperRightPools, BottomRightPools};
 
     int[][] possibleParityMoves = {{0, 1},{0, -1},{-1, 0},{-1, -1},{1, -1},{1,0}};
     int[][] possibleOddMoves = {{0,1},{0,-1},{1,1},{1,0},{-1,0},{-1,1}};
@@ -18,8 +20,54 @@ public class StandardGamePools implements PlayerPoolsInterface
 
 
     @Override
-    public boolean isMoveValid(int rowNum, int[] originalPosition, int[] desirePosition)
+    public boolean checkIfInEnemyBase(int[] originalPosition, int[] desirePosition, PlayerId id)
     {
+        int[][] base;
+        int enemyId = 0;
+        boolean isOriginInBase = false;
+        boolean isDestInBase = false;
+        switch(id)
+        {
+            case ONE:
+                enemyId = 4;
+                break;
+            case TWO:
+                enemyId = 5;
+                break;
+            case THREE:
+                enemyId = 6;
+                break;
+            case FOUR:
+                enemyId = 1;
+                break;
+            case FIVE:
+                enemyId = 2;
+                break;
+            case SIX:
+                enemyId = 3;
+                break;
+        }
+        enemyId -= 1;
+        for(int i = 0; i < 10; i++)
+        {
+            if(pools[enemyId][i][0] == originalPosition[0] && pools[enemyId][i][1] == originalPosition[1])
+            {
+                isOriginInBase = true;
+            }
+            if(pools[enemyId][i][0] == desirePosition[0] && pools[enemyId][i][1] == desirePosition[1])
+            {
+                isDestInBase = true;
+            }
+        }
+        return (isOriginInBase && !isDestInBase);
+    }
+    @Override
+    public boolean isMoveValid(int rowNum, int[] originalPosition, int[] desirePosition, PlayerId id)
+    {
+        if(checkIfInEnemyBase(originalPosition, desirePosition, id))
+        {
+            return false;
+        }
         int moveX = desirePosition[1] - originalPosition[1];
         int moveY = desirePosition[0] - originalPosition[0];
         if(rowNum % 2 == 0)
@@ -46,8 +94,12 @@ public class StandardGamePools implements PlayerPoolsInterface
     }
 
     @Override
-    public boolean isJumpValid(int[] originalPosition, int[] desirePosition)
+    public boolean isJumpValid(int[] originalPosition, int[] desirePosition, PlayerId id)
     {
+        if(checkIfInEnemyBase(originalPosition, desirePosition, id))
+        {
+            return false;
+        }
         int moveX = desirePosition[1] - originalPosition[1];
         int moveY = desirePosition[0] - originalPosition[0];
         int[] direction = new int[2];
@@ -97,8 +149,10 @@ public class StandardGamePools implements PlayerPoolsInterface
     }
 
     @Override
-    public boolean jumpCondition(PlayerId[][] board, int[] originalPosition, int[] desirePosition)
+    public boolean jumpCondition(PlayerId[][] board, int[] originalPosition, int[] desirePosition, int[] previousJumpPos)
     {
+        if(Arrays.equals(previousJumpPos, desirePosition))
+            return false;
         if (originalPosition[0] % 2 != desirePosition[0] % 2)
             return false;
         int yCord = (originalPosition[0] + desirePosition[0]) / 2;

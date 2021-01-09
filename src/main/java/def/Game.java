@@ -7,6 +7,7 @@ public class Game
 {
    private PlayerId[][] gameBoard = new PlayerId[17][17];
    int[] chosen = new int[2];
+   int[] prevJumpPos = new int[2];
    boolean isChosen = false;
    PlayerPoolsInterface gamePoolsRules;
    PlayerId playerId;
@@ -115,7 +116,7 @@ public class Game
                         chosen = pos;
                     }
                 }
-                else if (gameBoard[pos[0]][pos[1]].equals(PlayerId.ZERO) && gamePoolsRules.isMoveValid(chosen[0], chosen, pos) && !isJumping)
+                else if (gameBoard[pos[0]][pos[1]].equals(PlayerId.ZERO) && gamePoolsRules.isMoveValid(chosen[0], chosen, pos, playerId) && !isJumping)
                 {
                     CommunicationCenter.signalizeMove("MOVE");
                     CommunicationCenter.signalizeMove(playerId.name() + " " + chosen[1] + " " + chosen[0] + " " + pos[1] + " " + pos[0]);
@@ -126,12 +127,13 @@ public class Game
                     canIMove = false;
                 }
                 //Tutaj jest obsługa skakania itd, wysyłany jest najpierw sygnał MOVE JUMP, a na koniec ustawiana flaga od skakania, żeby można było tylko skakać
-                else if(gameBoard[pos[0]][pos[1]].equals(PlayerId.ZERO) && gamePoolsRules.isJumpValid(chosen, pos) && gamePoolsRules.jumpCondition(gameBoard, chosen, pos))
+                else if(gameBoard[pos[0]][pos[1]].equals(PlayerId.ZERO) && gamePoolsRules.isJumpValid(chosen, pos, playerId) && gamePoolsRules.jumpCondition(gameBoard, chosen, pos, prevJumpPos))
                 {
                     CommunicationCenter.signalizeMove("MOVE JUMP");
                     CommunicationCenter.signalizeMove(playerId.name() + " " + chosen[1] + " " + chosen[0] + " " + pos[1] + " " + pos[0]);
                     gameBoard[pos[0]][pos[1]] = playerId;
                     gameBoard[chosen[0]][chosen[1]] = PlayerId.ZERO;
+                    prevJumpPos = chosen;
                     chosen = pos;
                     isJumping = true;
                 }
@@ -153,20 +155,11 @@ public class Game
         {
             CommunicationCenter.signalizeEnd(playerId);
             chosen = new int[]{0, 0};
+            prevJumpPos = new int[]{0,0};
             isChosen = false;
             isJumping = false;
             isItMyTurn = false;
         }
-    }
-
-    public void setCanIMove(boolean canIMove)
-    {
-        this.canIMove = canIMove;
-    }
-
-    public void setIsItMyTurn(boolean isItMyTurn)
-    {
-        this.isItMyTurn = isItMyTurn;
     }
 
     public boolean isItMyTurn()
