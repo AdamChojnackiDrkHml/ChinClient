@@ -95,9 +95,10 @@ public class Client implements ActionListener
                 if(board.getGame().canIMove())
                 {
                     messageLabel.setText("Your turn");
-                }
-                else if(board.getGame().isItMyTurn())
-                {
+                    while(board.getGame().canIMove())
+                    {
+                       sleep(1);
+                    }
                     messageLabel.setText("End your turn");
                     while(board.getGame().isItMyTurn())
                     {

@@ -160,6 +160,7 @@ public class Game
             prevJumpPos = new int[]{0,0};
             isChosen = false;
             isJumping = false;
+            canIMove = false;
             isItMyTurn = false;
             CommunicationCenter.signalizeEnd(playerId);
         }
