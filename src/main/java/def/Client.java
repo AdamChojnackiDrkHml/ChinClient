@@ -40,9 +40,10 @@ public class Client implements ActionListener
         id = PlayerId.valueOf(aaa);
         Game game = new Game(id, numOfPlayers, new StandardGamePools());
         board = new Board(game);
-        if (id.equals(PlayerId.valueOf(bbb)))
+        if (id.equals(PlayerId.ONE))
         {
-       		out.println("YOUR_MOVE");
+       		board.getGame().setCanIMove(true);
+            board.getGame().setIsItMyTurn(true);
        	}
         communicationCenter = new CommunicationCenter(out, board, in);
         messageLabel.setBackground(Color.lightGray);
@@ -128,7 +129,6 @@ public class Client implements ActionListener
         {
             board.getGame().endTurn();
             board.repaint();
-            CommunicationCenter.signalizeEnd(id);
         }
     }
 }

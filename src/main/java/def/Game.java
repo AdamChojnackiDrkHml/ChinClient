@@ -11,6 +11,7 @@ public class Game
    PlayerPoolsInterface gamePoolsRules;
    PlayerId playerId;
    public boolean isItMyTurn = false;
+   private boolean canIMove = false;
    private boolean isJumping = false;
 
    public Game(PlayerId id, NumberOfPlayers numOfPlayers, PlayerPoolsInterface gamePoolsRules)
@@ -77,6 +78,7 @@ public class Game
         else if (order.equals("YOUR_MOVE"))
         {
            	isItMyTurn = true;
+           	canIMove = true;
         }
         else if (order.equals("WINNER"))
         {
@@ -88,7 +90,7 @@ public class Game
     }
     public void decide(int[] pos) throws IncorrectFieldException
     {
-        if(isItMyTurn)
+        if(canIMove)
         {
             if (!isChosen && !isJumping)
             {
@@ -121,7 +123,7 @@ public class Game
                     gameBoard[chosen[0]][chosen[1]] = PlayerId.ZERO;
                     chosen = new int[]{0, 0};
                     isChosen = false;
-                //    isItMyTurn = false;
+                    canIMove = false;
                 }
                 //Tutaj jest obsługa skakania itd, wysyłany jest najpierw sygnał MOVE JUMP, a na koniec ustawiana flaga od skakania, żeby można było tylko skakać
                 else if(gameBoard[pos[0]][pos[1]].equals(PlayerId.ZERO) && gamePoolsRules.isJumpValid(chosen, pos) && gamePoolsRules.jumpCondition(gameBoard, chosen, pos))
@@ -147,9 +149,23 @@ public class Game
     }
     public void endTurn()
     {
-        chosen = new int[] {0,0};
-        isChosen = false;
-        isJumping = false;
-        isItMyTurn = false;
+        if(isItMyTurn)
+        {
+            CommunicationCenter.signalizeEnd(playerId);
+            chosen = new int[]{0, 0};
+            isChosen = false;
+            isJumping = false;
+            isItMyTurn = false;
+        }
+    }
+
+    public void setCanIMove(boolean canIMove)
+    {
+        this.canIMove = canIMove;
+    }
+
+    public void setIsItMyTurn(boolean isItMyTurn)
+    {
+        this.isItMyTurn = isItMyTurn;
     }
 }
