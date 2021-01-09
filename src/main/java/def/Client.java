@@ -3,11 +3,15 @@ package def;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.Scanner;
 import java.io.PrintWriter;
 import java.net.Socket;
 
 import javax.swing.*;
+
+import static java.lang.Thread.sleep;
 
 /**
  * A client for a multi-player Chinese checkers toe game.
@@ -16,7 +20,7 @@ public class Client implements ActionListener
 {
 
     private JFrame frame = new JFrame("Chinese checkers");
-    private JLabel messageLabel = new JLabel("...");
+    private JLabel messageLabel = new JLabel("Waiting for opponent's to conncet");
     private Board board;
 
     private Socket socket;
@@ -40,11 +44,6 @@ public class Client implements ActionListener
         id = PlayerId.valueOf(aaa);
         Game game = new Game(id, numOfPlayers, new StandardGamePools());
         board = new Board(game);
-        if (id.equals(PlayerId.ONE))
-        {
-       		board.getGame().setCanIMove(true);
-            board.getGame().setIsItMyTurn(true);
-       	}
         communicationCenter = new CommunicationCenter(out, board, in);
         messageLabel.setBackground(Color.lightGray);
         frame.getContentPane().add(messageLabel, BorderLayout.NORTH);
@@ -93,13 +92,36 @@ public class Client implements ActionListener
                     break;
                 }*/
                 communicationCenter.interpretMessage();
+                if(board.getGame().canIMove())
+                {
+                    messageLabel.setText("Your turn");
+                }
+                else if(board.getGame().isItMyTurn())
+                {
+                    messageLabel.setText("End your turn");
+                    while(board.getGame().isItMyTurn())
+                    {
+                        sleep(1);
+                    }
+                    messageLabel.setText("Other player's turn");
+                }
+                else
+                {
+                    messageLabel.setText("Other player's turn");
+                }
+
             }
-            out.println("QUIT");
-        } 
+            CommunicationCenter.signalizeQuit(id);
+        }
+        catch (ConnectionException e)
+        {
+            messageLabel.setText("Player has left");
+            sleep(2000);
+        }
         catch (Exception e) 
         {
             e.printStackTrace();
-        } 
+        }
         finally 
         {
             socket.close();
@@ -131,4 +153,8 @@ public class Client implements ActionListener
             board.repaint();
         }
     }
+
+
+
+
 }

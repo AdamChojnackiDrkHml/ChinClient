@@ -25,11 +25,22 @@ public class CommunicationCenter
     {
         out.println("END " + id.name());
     }
-    void interpretMessage()
+    static void signalizeQuit(PlayerId id)
+    {
+        out.println("QUIT " + id.name());
+    }
+    void interpretMessage() throws ConnectionException
     {
         String aa = in.nextLine();
         System.out.println(aa);
-        board.getGame().getMessage(aa);
-        board.repaint();
+        if(!aa.startsWith("QUIT"))
+        {
+            board.getGame().getMessage(aa);
+            board.repaint();
+        }
+        else
+        {
+            throw new ConnectionException(aa);
+        }
     }
 }

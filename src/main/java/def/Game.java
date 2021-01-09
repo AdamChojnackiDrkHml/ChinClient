@@ -168,4 +168,14 @@ public class Game
     {
         this.isItMyTurn = isItMyTurn;
     }
+
+    public boolean isItMyTurn()
+    {
+        return isItMyTurn;
+    }
+
+    public boolean canIMove()
+    {
+        return canIMove;
+    }
 }
