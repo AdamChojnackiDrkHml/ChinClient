@@ -98,7 +98,7 @@ public class Client implements ActionListener
                     scanner.next();
                     message = scanner.next();
                     String place = message = scanner.next();
-                    JOptionPane.showMessageDialog(frame, " Player " + message + "took " + place + " place");
+                    JOptionPane.showMessageDialog(frame, "Player " + message + " took " + place + ". place");
                 }
                 if(board.getGame().canIMove())
                 {
