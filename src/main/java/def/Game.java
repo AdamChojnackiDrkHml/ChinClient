@@ -6,15 +6,20 @@ import java.util.Scanner;
 public class Game
 {
    private PlayerId[][] gameBoard = new PlayerId[17][17];
-   int[] chosen = new int[2];
-   int[] prevJumpPos = new int[2];
-   boolean isChosen = false;
-   PlayerPoolsInterface gamePoolsRules;
-   PlayerId playerId;
+   private final PlayerPoolsInterface gamePoolsRules;
+   private final PlayerId playerId;
+
+
+   private int[] chosen = new int[2];
+   private int[] prevJumpPos = new int[2];
+
+
+   private boolean isChosen = false;
    private boolean isItMyTurn = false;
    private boolean canIMove = false;
    private boolean isJumping = false;
    private boolean haveIWon = false;
+
 
    public Game(PlayerId id, NumberOfPlayers numOfPlayers, PlayerPoolsInterface gamePoolsRules)
    {
@@ -22,6 +27,7 @@ public class Game
        this.playerId = id;
        choosePools(numOfPlayers);
    }
+
     private boolean isThisValidPool(int xCord, int yCord)
     {
         return !(((yCord == 13 || yCord == 3) && (xCord > 9 || xCord < 6)) ||
@@ -59,36 +65,36 @@ public class Game
     {
         Scanner scanner = new Scanner(message);
         String order = scanner.next();
-        if (order.equals("MOVE"))
+        switch (order)
         {
-            try
-            {
-                PlayerId playerMovedId = PlayerId.valueOf(scanner.next());
-                int xBeg = Integer.parseInt(scanner.next());
-                int yBeg = Integer.parseInt(scanner.next());
-                int xDest = Integer.parseInt(scanner.next());
-                int yDest = Integer.parseInt(scanner.next());
+            case "MOVE":
+                try
+                {
+                    PlayerId playerMovedId = PlayerId.valueOf(scanner.next());
+                    int xBeg = Integer.parseInt(scanner.next());
+                    int yBeg = Integer.parseInt(scanner.next());
+                    int xDest = Integer.parseInt(scanner.next());
+                    int yDest = Integer.parseInt(scanner.next());
 
-                gameBoard[yBeg][xBeg] = PlayerId.ZERO;
-                gameBoard[yDest][xDest] = playerMovedId;
-            } 
-            catch (NumberFormatException ignored)
-            {
+                    gameBoard[yBeg][xBeg] = PlayerId.ZERO;
+                    gameBoard[yDest][xDest] = playerMovedId;
+                } catch (NumberFormatException ignored)
+                {
 
-            }
-        }
-        else if (order.equals("YOUR_MOVE"))
-        {
-           	isItMyTurn = true;
-           	canIMove = true;
-        }
-        else if (order.equals("WINNER"))
-        {
-        	if(PlayerId.valueOf(scanner.next()).equals(playerId))
-            {
-                haveIWon = true;
-            }
+                }
+                break;
+            case "YOUR_MOVE":
+                isItMyTurn = true;
+                canIMove = true;
+                break;
+            case "WINNER":
+                if (PlayerId.valueOf(scanner.next()).equals(playerId))
+                {
+                    haveIWon = true;
+                    endTurn();
+                }
 
+                break;
         }
         scanner.close();
     }
@@ -107,11 +113,13 @@ public class Game
                 {
                     chosen = pos;
                     isChosen = true;
-                } else
+                }
+                else
                 {
                     throw new IncorrectFieldException("INVALID POOL");
                 }
-            } else
+            }
+            else
             {
                 if (gameBoard[pos[0]][pos[1]].equals(playerId) && !isJumping)
                 {
@@ -119,7 +127,8 @@ public class Game
                     {
                         isChosen = false;
                         chosen = new int[]{0, 0};
-                    } else
+                    }
+                    else
                     {
                         chosen = pos;
                     }
@@ -134,7 +143,6 @@ public class Game
                     isChosen = false;
                     canIMove = false;
                 }
-                //Tutaj jest obsługa skakania itd, wysyłany jest najpierw sygnał MOVE JUMP, a na koniec ustawiana flaga od skakania, żeby można było tylko skakać
                 else if(gameBoard[pos[0]][pos[1]].equals(PlayerId.ZERO) && gamePoolsRules.isJumpValid(chosen, pos, playerId) && gamePoolsRules.jumpCondition(gameBoard, chosen, pos, prevJumpPos))
                 {
                     CommunicationCenter.signalizeMove("MOVE JUMP");
@@ -158,6 +166,7 @@ public class Game
     {
         return gameBoard;
     }
+
     public void endTurn()
     {
 
@@ -182,5 +191,15 @@ public class Game
     public boolean canIMove()
     {
         return canIMove;
+    }
+
+    public boolean isHaveIWon()
+    {
+        return haveIWon;
+    }
+
+    public int[] getChosen()
+    {
+        return chosen;
     }
 }

@@ -21,4 +21,6 @@ public interface PlayerPoolsInterface
     PlayerId[][] setBoardForSixPlayers(PlayerId[][] pools);
 
     PlayerId[][] setUpBoardForPlayers(NumberOfPlayers numOfPlayers,PlayerId[][] pools);
+
+    int getDirection(int moveX, int moveY);
 }

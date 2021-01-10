@@ -3,8 +3,7 @@ package def;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import java.io.IOException;
 import java.util.Scanner;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -16,47 +15,67 @@ import static java.lang.Thread.sleep;
 /**
  * A client for a multi-player Chinese checkers toe game.
  */
-public class Client implements ActionListener
+public class Client extends JFrame implements ActionListener
 {
 
-    private JFrame frame = new JFrame("Chinese checkers");
-    private JLabel messageLabel = new JLabel("Waiting for opponent's to conncet");
+    private final JLabel messageLabel = new JLabel("Waiting for opponent's to connect");
     private Board board;
 
     private Socket socket;
     private Scanner in;
     private PrintWriter out;
-    CommunicationCenter communicationCenter;
+    private CommunicationCenter communicationCenter;
     private PlayerId id;
     private JButton endTurn;
 
     public Client(String serverAddress) throws Exception 
     {
+        super("Chinese checkers");
 
+        initializeConnectionStuff(serverAddress);
+        initializeGameStuff();
+        initializeMessageLabel();
+        initializeButton();
+        initializeFrame();
+    }
+
+    private void initializeFrame()
+    {
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(40 * 18, 40 * 20);
+        setVisible(true);
+        setResizable(false);
+    }
+    private void initializeConnectionStuff(String serverAddress) throws IOException
+    {
         socket = new Socket(serverAddress, 58901);
         in = new Scanner(socket.getInputStream());
         out = new PrintWriter(socket.getOutputStream(), true);
-        String bbb = in.nextLine();
-        System.out.println(bbb);
-        NumberOfPlayers numOfPlayers = NumberOfPlayers.valueOf(bbb);
-        String aaa = in.nextLine();
-        System.out.println(aaa);
-        id = PlayerId.valueOf(aaa);
-        Game game = new Game(id, numOfPlayers, new StandardGamePools());
-        board = new Board(game);
-        communicationCenter = new CommunicationCenter(out, board, in);
-        messageLabel.setBackground(Color.lightGray);
-        frame.getContentPane().add(messageLabel, BorderLayout.NORTH);
-        frame.getContentPane().add(board);
-        endTurn = new JButton("End turn");
-        endTurn.addActionListener(this);
-        frame.getContentPane().add(endTurn, BorderLayout.SOUTH);
     }
 
+    private void initializeGameStuff()
+    {
+        NumberOfPlayers numOfPlayers = NumberOfPlayers.valueOf(in.nextLine());
+        id = PlayerId.valueOf(in.nextLine());
 
-    //Dorobiłem tą funkcję i można ją wywołać z klasy GAME, dzięki czemu możemy z GAME kontrolować kiedy wysyłamy coś do servera
-    //Czeka tylko na uzupełnienie kontatku z serverem, więc na razie jest zakomentowana
+        board = new Board(new Game(id, numOfPlayers, new StandardGamePools()));
 
+        communicationCenter = new CommunicationCenter(out, board, in);
+    }
+
+    private void initializeMessageLabel()
+    {
+        messageLabel.setBackground(Color.lightGray);
+        getContentPane().add(messageLabel, BorderLayout.NORTH);
+        getContentPane().add(board);
+    }
+
+    private void initializeButton()
+    {
+        endTurn = new JButton("End turn");
+        endTurn.addActionListener(this);
+        getContentPane().add(endTurn, BorderLayout.SOUTH);
+    }
 
     /**
      * The main thread of the client will listen for messages from the server. The
@@ -70,36 +89,28 @@ public class Client implements ActionListener
 
     public void play() throws Exception 
     {
-        try {
-            frame.setTitle("Chinese checkers: Player " + id.name());
+        try
+        {
+
+            setTitle("Chinese checkers: Player " + id.name());
+
             while (in.hasNextLine()) 
             {
-/*                response = in.nextLine();
+                if(board.getGame().isHaveIWon())
+                {
+                    JOptionPane.showMessageDialog(this, "Congratulations, you've won");
+                    break;
+                }
 
-                else if (response.startsWith("VICTORY")) 
-                {
-                    JOptionPane.showMessageDialog(frame, "Winner");
-                    break;
-                } 
-                else if (response.startsWith("DEFEAT")) 
-                {
-                    JOptionPane.showMessageDialog(frame, "Sorry you lost");
-                    break;
-                } 
-                else if (response.startsWith("OTHER_PLAYER_LEFT")) 
-                {
-                    JOptionPane.showMessageDialog(frame, "Other player left");
-                    break;
-                }*/
+
                 String message = communicationCenter.interpretMessage();
+
                 if(!message.equals(" "))
                 {
-                    Scanner scanner = new Scanner(message);
-                    scanner.next();
-                    message = scanner.next();
-                    String place = message = scanner.next();
-                    JOptionPane.showMessageDialog(frame, "Player " + message + " took " + place + ". place");
+                    JOptionPane.showMessageDialog(this, message + ". place");
                 }
+
+
                 if(board.getGame().canIMove())
                 {
                     messageLabel.setText("Your turn");
@@ -113,40 +124,36 @@ public class Client implements ActionListener
                         sleep(1);
                     }
                 }
+
                 messageLabel.setText("Other player's turn");
 
             }
+            messageLabel.setText("You've won. Congratulations");
+
+
+            while(in.hasNextLine())
+            {
+                communicationCenter.interpretMessage();
+                if(board.getGame().isItMyTurn())
+                {
+                    board.getGame().endTurn();
+                }
+            }
             CommunicationCenter.signalizeQuit(id);
+
         }
         catch (ConnectionException e)
         {
             messageLabel.setText("Player has left");
             sleep(2000);
         }
-        catch (Exception e) 
-        {
-            e.printStackTrace();
-        }
         finally 
         {
             socket.close();
-            frame.dispose();
+            dispose();
+            in.close();
+            out.close();
         }
-    }
-
-    public static void main(String[] args) throws Exception 
-    {
-        if (args.length != 1) 
-        {
-            System.err.println("Pass the server IP as the sole command line argument");
-            return;
-        }
-        Client client = new Client(args[0]);
-        client.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        client.frame.setSize(40 * 18, 40 * 20);
-        client.frame.setVisible(true);
-        client.frame.setResizable(false);
-        client.play();
     }
 
     public void actionPerformed(ActionEvent e)
@@ -158,7 +165,6 @@ public class Client implements ActionListener
             board.repaint();
         }
     }
-
 
 
 

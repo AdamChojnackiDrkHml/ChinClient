@@ -6,7 +6,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Scanner;
 
 
 public class Board extends JPanel
@@ -104,9 +103,9 @@ public class Board extends JPanel
         for(Pool pool : pools)
         {
 
-            g2d.setColor(chooseColor(game.getGameBoard()[pool.getyPos()][pool.getxPos()]));
-            g2d.fill(pool.ellipse2D);
-            if(Arrays.equals(game.chosen, new int[]{pool.getyPos(), pool.getxPos()}))
+            g2d.setColor(chooseColor(game.getGameBoard()[pool.getYPos()][pool.getXPos()]));
+            g2d.fill(pool.getEllipse2D());
+            if(Arrays.equals(game.getChosen(), new int[]{pool.getYPos(), pool.getXPos()}))
             {
                 g2d.setColor(Color.WHITE);
             }
@@ -114,7 +113,7 @@ public class Board extends JPanel
             {
                 g2d.setColor(Color.black);
             }
-            g2d.draw(pool.ellipse2D);
+            g2d.draw(pool.getEllipse2D());
         }
 
 
@@ -141,9 +140,9 @@ public class Board extends JPanel
     {
         for (Pool pool : pools)
         {
-            if(pool.ellipse2D.contains(x,y))
+            if(pool.getEllipse2D().contains(x,y))
             {
-                game.decide(new int[]{pool.getyPos(), pool.getxPos()});
+                game.decide(new int[]{pool.getYPos(), pool.getXPos()});
                 repaint();
                 break;
             }

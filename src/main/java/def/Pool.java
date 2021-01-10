@@ -1,12 +1,10 @@
 package def;
 
-import javax.swing.*;
-import java.awt.*;
 import java.awt.geom.Ellipse2D;
 
 public class Pool
 {
-    Ellipse2D ellipse2D;
+    private final Ellipse2D ellipse2D;
     private final int xPos;
     private final int yPos;
 
@@ -17,13 +15,18 @@ public class Pool
         yPos = i;
     }
 
-    public int getxPos()
+    public int getXPos()
     {
         return xPos;
     }
 
-    public int getyPos()
+    public int getYPos()
     {
         return yPos;
+    }
+
+    public Ellipse2D getEllipse2D()
+    {
+        return ellipse2D;
     }
 }

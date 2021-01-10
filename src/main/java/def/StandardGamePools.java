@@ -22,7 +22,6 @@ public class StandardGamePools implements PlayerPoolsInterface
     @Override
     public boolean checkIfInEnemyBase(int[] originalPosition, int[] desirePosition, PlayerId id)
     {
-        int[][] base;
         int enemyId = (PlayerId.getInt(id) + 2) % 6;
         boolean isOriginInBase = false;
         boolean isDestInBase = false;
@@ -155,6 +154,7 @@ public class StandardGamePools implements PlayerPoolsInterface
         return (!check.equals(PlayerId.ZERO));
 
     }
+    @Override
     public PlayerId[][] setUpperPools(PlayerId[][] pools)
     {
         for (int[] cords : UpperPools)
@@ -164,6 +164,7 @@ public class StandardGamePools implements PlayerPoolsInterface
         return pools;
     }
 
+    @Override
     public PlayerId[][] setUpperLeftPools(PlayerId[][] pools)
     {
         for (int[] cords : UpperLeftPools)
@@ -172,6 +173,8 @@ public class StandardGamePools implements PlayerPoolsInterface
         }
         return pools;
     }
+
+    @Override
     public PlayerId[][] setUpperRightPools(PlayerId[][] pools)
     {
         for (int[] cords : UpperRightPools)
@@ -180,6 +183,8 @@ public class StandardGamePools implements PlayerPoolsInterface
         }
         return pools;
     }
+
+    @Override
     public PlayerId[][] setBottomLeftPools(PlayerId[][] pools)
     {
         for (int[] cords : BottomLeftPools)
@@ -188,6 +193,8 @@ public class StandardGamePools implements PlayerPoolsInterface
         }
         return pools;
     }
+
+    @Override
     public PlayerId[][] setBottomRightPools(PlayerId[][] pools)
     {
         for (int[] cords : BottomRightPools)
@@ -196,6 +203,8 @@ public class StandardGamePools implements PlayerPoolsInterface
         }
         return pools;
     }
+
+    @Override
     public PlayerId[][] setBottomPools(PlayerId[][] pools)
     {
         for (int[] cords : BottomPools)
@@ -205,26 +214,33 @@ public class StandardGamePools implements PlayerPoolsInterface
         return pools;
     }
 
+    @Override
     public PlayerId[][] setBoardForTwoPlayers(PlayerId[][] pools)
     {
         return setBottomPools(setUpperPools(pools));
     }
 
+    @Override
     public PlayerId[][] setBoardForThreePlayers(PlayerId[][] pools)
     {
         return setBottomPools(setUpperLeftPools(setUpperRightPools(pools)));
 
     }
+
+    @Override
     public PlayerId[][] setBoardForFourPlayers(PlayerId[][] pools)
     {
         return setUpperRightPools(setBottomLeftPools(setBoardForTwoPlayers(pools)));
 
     }
+
+    @Override
     public PlayerId[][] setBoardForSixPlayers(PlayerId[][] pools)
     {
         return setBoardForFourPlayers(setUpperLeftPools(setBottomRightPools(pools)));
     }
 
+    @Override
     public PlayerId[][] setUpBoardForPlayers(NumberOfPlayers numOfPlayers, PlayerId[][] pools)
     {
         switch (numOfPlayers)
@@ -252,7 +268,8 @@ public class StandardGamePools implements PlayerPoolsInterface
         }
     }
 
-    private int getDirection(int moveX, int moveY)
+    @Override
+    public int getDirection(int moveX, int moveY)
     {
         if(moveX > 0)
         {

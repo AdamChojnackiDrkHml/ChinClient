@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.awt.*;
 
+
 import static org.junit.Assert.*;
 
 public class BoardTest
@@ -22,19 +23,19 @@ public class BoardTest
     public void testChoosePools()
     {
         Board board = new Board(new Game(PlayerId.ONE, NumberOfPlayers.THREE, new StandardGamePools()));
-        assertEquals(board.getPools().get(0).getyPos(), 0);
-        assertEquals(board.getPools().get(0).getxPos(), 8);
-        assertNotEquals(board.getPools().get(0).getxPos(), 1);
-        assertNotEquals(board.getPools().get(0).getyPos(), 5);
+        assertEquals(board.getPools().get(0).getYPos(), 0);
+        assertEquals(board.getPools().get(0).getXPos(), 8);
+        assertNotEquals(board.getPools().get(0).getXPos(), 1);
+        assertNotEquals(board.getPools().get(0).getYPos(), 5);
     }
 
-   /* @Test
+
+    @Test
     public void testContactWithGame() throws IncorrectFieldException
     {
         Board board = new Board(new Game(PlayerId.ONE, NumberOfPlayers.THREE, new StandardGamePools()));
-        Exception exception = assertThrows(IncorrectFieldException.class, () ->board.contactWithGame(8,0));
-        String expectedMessage = "INVALID MOVE";
-        String actualMessage = exception.getMessage();
-        assertEquals(expectedMessage, actualMessage);
-    } */
+        board.getGame().getMessage("YOUR_MOVE");
+        board.contactWithGame(341,664);
+        assertArrayEquals(board.getGame().getChosen(), new int[]{16, 8});
+    }
 }
