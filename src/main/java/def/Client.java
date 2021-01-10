@@ -91,7 +91,15 @@ public class Client implements ActionListener
                     JOptionPane.showMessageDialog(frame, "Other player left");
                     break;
                 }*/
-                communicationCenter.interpretMessage();
+                String message = communicationCenter.interpretMessage();
+                if(!message.equals(" "))
+                {
+                    Scanner scanner = new Scanner(message);
+                    scanner.next();
+                    message = scanner.next();
+                    String place = message = scanner.next();
+                    JOptionPane.showMessageDialog(frame, " Player " + message + "took " + place + " place");
+                }
                 if(board.getGame().canIMove())
                 {
                     messageLabel.setText("Your turn");

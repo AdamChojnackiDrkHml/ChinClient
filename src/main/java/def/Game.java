@@ -14,6 +14,7 @@ public class Game
    private boolean isItMyTurn = false;
    private boolean canIMove = false;
    private boolean isJumping = false;
+   private boolean haveIWon = false;
 
    public Game(PlayerId id, NumberOfPlayers numOfPlayers, PlayerPoolsInterface gamePoolsRules)
    {
@@ -83,14 +84,21 @@ public class Game
         }
         else if (order.equals("WINNER"))
         {
-        	String winner = scanner.nextLine();
-        	//winner to wiadomosc o tresci "IS PLAYER X"
-        	//tu trzeba jakos zrobic tak, ze w okienku wyswietli sie komunikat "WINNER " + winner
+        	if(PlayerId.valueOf(scanner.next()).equals(playerId))
+            {
+                haveIWon = true;
+            }
+
         }
         scanner.close();
     }
     public void decide(int[] pos) throws IncorrectFieldException
     {
+        if(haveIWon)
+        {
+            endTurn();
+            return;
+        }
         if(canIMove)
         {
             if (!isChosen && !isJumping)

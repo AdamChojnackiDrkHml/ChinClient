@@ -29,18 +29,25 @@ public class CommunicationCenter
     {
         out.println("QUIT " + id.name());
     }
-    void interpretMessage() throws ConnectionException
+    String interpretMessage() throws ConnectionException
     {
         String aa = in.nextLine();
         System.out.println(aa);
-        if(!aa.startsWith("QUIT"))
+        if(aa.startsWith("QUIT"))
+        {
+            throw new ConnectionException(aa);
+
+        }
+        else if(aa.startsWith("WINNER"))
+        {
+            board.getGame().getMessage(aa);
+            return aa;
+        }
+        else
         {
             board.getGame().getMessage(aa);
             board.repaint();
         }
-        else
-        {
-            throw new ConnectionException(aa);
-        }
+        return " ";
     }
 }
