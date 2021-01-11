@@ -45,7 +45,7 @@ public class StandardGameRules implements GameRulesInterface
         for(int i = 0; i < GameRulesInterface.NumberOfPoolsInEnemyBase; i++)
         {
             if(pools[enemyId][i][yCoordinatePlaceInArray] == originalPosition[yCoordinatePlaceInArray]
-                    && pools[enemyId][i][xCoordinatePlaceInArray] == originalPosition[yCoordinatePlaceInArray])
+                    && pools[enemyId][i][xCoordinatePlaceInArray] == originalPosition[xCoordinatePlaceInArray])
             {
                 isOriginInBase = true;
             }
@@ -79,7 +79,7 @@ public class StandardGameRules implements GameRulesInterface
         {
             for(int[] move : possibleParityMoves)
             {
-                if(moveX == move[xCoordinatePlaceInArray] && moveY == move[xCoordinatePlaceInArray])
+                if(moveX == move[xCoordinatePlaceInArray] && moveY == move[yCoordinatePlaceInArray])
                 {
                     return true;
                 }
