@@ -12,9 +12,12 @@ import java.util.Arrays;
  * @author Elzbieta Wisniewska and Adam Chojnacki
  * @version 2.0
  */
+
 public class Board extends JPanel
 {
-
+    static final int PoolSize = 40;
+    static final int VerticalShift = 10;
+    static final int BoardOddRowsHorizontalShift = 20;
     private final ArrayList<Pool> pools = new ArrayList<>();
     private final Game game;
 
@@ -73,20 +76,20 @@ public class Board extends JPanel
      */
     private void choosePools()
     {
-        for(int i = 0; i < 17; i++)
+        for(int i = 0; i < GameRulesInterface.BoardSize; i++)
         {
-            for(int j = 0; j < 17; j++)
+            for(int j = 0; j < GameRulesInterface.BoardSize; j++)
             {
                 if(game.getGameBoard()[i][j] != PlayerId.NULL)
                 {
                     Pool newPool;
                     if(i % 2 == 0)
                     {
-                        newPool = new Pool(j * 40, i * 40 + 10, 40, i, j);
+                        newPool = new Pool(j * PoolSize, i * PoolSize + VerticalShift, PoolSize, i, j);
                     }
                     else
                     {
-                        newPool = new Pool(j * 40 + 20, i * 40 + 10,40, i, j);
+                        newPool = new Pool(j * PoolSize + BoardOddRowsHorizontalShift, i * PoolSize +VerticalShift,PoolSize, i, j);
                     }
                     pools.add(newPool);
                 }

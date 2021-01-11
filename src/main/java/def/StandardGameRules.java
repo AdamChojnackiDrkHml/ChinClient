@@ -10,6 +10,10 @@ import java.util.Arrays;
  */
 public class StandardGameRules implements GameRulesInterface
 {
+    private static final int xCoordinatePlaceInArray = 1;
+    private static final int yCoordinatePlaceInArray = 0;
+
+
     int[][] UpperPools = {{0,8}, {1,7}, {1,8}, {2,7}, {2,8}, {2,9}, {3,6}, {3,7}, {3,8}, {3,9}};
     int[][] UpperLeftPools = {{4,2}, {4,3}, {4,4}, {4,5}, {5,2}, {5,3}, {5,4}, {6,3}, {6,4}, {7,3}};
     int[][] UpperRightPools = {{4,11}, {4,12}, {4,13}, {4,14}, {5,11}, {5,12}, {5,13}, {6,12}, {6,13}, {7,12}};
@@ -38,13 +42,15 @@ public class StandardGameRules implements GameRulesInterface
         boolean isOriginInBase = false;
         boolean isDestInBase = false;
 
-        for(int i = 0; i < 10; i++)
+        for(int i = 0; i < GameRulesInterface.NumberOfPoolsInEnemyBase; i++)
         {
-            if(pools[enemyId][i][0] == originalPosition[0] && pools[enemyId][i][1] == originalPosition[1])
+            if(pools[enemyId][i][yCoordinatePlaceInArray] == originalPosition[yCoordinatePlaceInArray]
+                    && pools[enemyId][i][xCoordinatePlaceInArray] == originalPosition[yCoordinatePlaceInArray])
             {
                 isOriginInBase = true;
             }
-            if(pools[enemyId][i][0] == desirePosition[0] && pools[enemyId][i][1] == desirePosition[1])
+            if(pools[enemyId][i][yCoordinatePlaceInArray] == desirePosition[yCoordinatePlaceInArray]
+                    && pools[enemyId][i][xCoordinatePlaceInArray] == desirePosition[xCoordinatePlaceInArray])
             {
                 isDestInBase = true;
             }
@@ -67,13 +73,13 @@ public class StandardGameRules implements GameRulesInterface
         {
             return false;
         }
-        int moveX = desirePosition[1] - originalPosition[1];
-        int moveY = desirePosition[0] - originalPosition[0];
-        if(originalPosition[0] % 2 == 0)
+        int moveX = desirePosition[xCoordinatePlaceInArray] - originalPosition[xCoordinatePlaceInArray];
+        int moveY = desirePosition[yCoordinatePlaceInArray] - originalPosition[yCoordinatePlaceInArray];
+        if(originalPosition[yCoordinatePlaceInArray] % 2 == 0)
         {
             for(int[] move : possibleParityMoves)
             {
-                if(moveX == move[1] && moveY == move[0])
+                if(moveX == move[xCoordinatePlaceInArray] && moveY == move[xCoordinatePlaceInArray])
                 {
                     return true;
                 }
@@ -83,7 +89,7 @@ public class StandardGameRules implements GameRulesInterface
         {
             for(int[] move : possibleOddMoves)
             {
-                if(moveX == move[1] && moveY == move[0])
+                if(moveX == move[xCoordinatePlaceInArray] && moveY == move[yCoordinatePlaceInArray])
                 {
                     return true;
                 }
@@ -107,14 +113,14 @@ public class StandardGameRules implements GameRulesInterface
         {
             return false;
         }
-        int moveX = desirePosition[1] - originalPosition[1];
-        int moveY = desirePosition[0] - originalPosition[0];
+        int moveX = desirePosition[xCoordinatePlaceInArray] - originalPosition[xCoordinatePlaceInArray];
+        int moveY = desirePosition[yCoordinatePlaceInArray] - originalPosition[yCoordinatePlaceInArray];
         int[] direction = possibleJumps[getDirection(moveX, moveY)];
 
-        for(int i = 0; i < 14; i++)
+        for(int i = 0; i < 7; i++)
         {
 
-            if(direction[0] * i == moveY && direction[1] * i == moveX)
+            if(direction[yCoordinatePlaceInArray] * i == moveY && direction[xCoordinatePlaceInArray] * i == moveX)
             {
                 return true;
             }
@@ -134,28 +140,30 @@ public class StandardGameRules implements GameRulesInterface
     @Override
     public boolean jumpCondition(PlayerId[][] board, int[] originalPosition, int[] desirePosition, int[] previousJumpPos)
     {
-        int direction = getDirection(desirePosition[1] - originalPosition[1], desirePosition[0] - originalPosition[0]);
+        int moveX = desirePosition[xCoordinatePlaceInArray] - originalPosition[xCoordinatePlaceInArray];
+        int moveY = desirePosition[yCoordinatePlaceInArray] - originalPosition[yCoordinatePlaceInArray];
+        int direction = getDirection(moveX, moveY);
         if (Arrays.equals(previousJumpPos, desirePosition))
             return false;
-        if (originalPosition[0] % 2 != desirePosition[0] % 2)
+        if (originalPosition[yCoordinatePlaceInArray] % 2 != desirePosition[yCoordinatePlaceInArray] % 2)
             return false;
         int[] parityDirection = possibleParityMoves[direction];
         int[] oddDirection = possibleOddMoves[direction];
         int counter = 0;
         int distance = 0;
-        int xCord = originalPosition[1];
-        int yCord = originalPosition[0];
+        int xCord = originalPosition[xCoordinatePlaceInArray];
+        int yCord = originalPosition[yCoordinatePlaceInArray];
         PlayerId check;
         for (int i = 0; i < 14; i++)
         {
             if (yCord % 2 == 0)
             {
-                yCord += parityDirection[0];
-                xCord += parityDirection[1];
+                yCord += parityDirection[yCoordinatePlaceInArray];
+                xCord += parityDirection[xCoordinatePlaceInArray];
             } else
             {
-                yCord += oddDirection[0];
-                xCord += oddDirection[1];
+                yCord += oddDirection[yCoordinatePlaceInArray];
+                xCord += oddDirection[xCoordinatePlaceInArray];
             }
             check = board[yCord][xCord];
             if(check.equals(PlayerId.NULL))
@@ -167,25 +175,28 @@ public class StandardGameRules implements GameRulesInterface
                 counter++;
             }
             distance++;
-            if (desirePosition[0] == yCord && desirePosition[1] == xCord)
+            if (desirePosition[yCoordinatePlaceInArray] == yCord
+                    && desirePosition[xCoordinatePlaceInArray] == xCord)
+            {
                 break;
+            }
         }
         if(counter != 1)
         {
             return false;
         }
-        xCord = originalPosition[1];
-        yCord = originalPosition[0];
+        xCord = originalPosition[xCoordinatePlaceInArray];
+        yCord = originalPosition[yCoordinatePlaceInArray];
         for (int i = 0; i < (distance / 2); i++)
         {
             if (yCord % 2 == 0)
             {
-                yCord += parityDirection[0];
-                xCord += parityDirection[1];
+                yCord += parityDirection[yCoordinatePlaceInArray];
+                xCord += parityDirection[xCoordinatePlaceInArray];
             } else
             {
-                yCord += oddDirection[0];
-                xCord += oddDirection[1];
+                yCord += oddDirection[yCoordinatePlaceInArray];
+                xCord += oddDirection[xCoordinatePlaceInArray];
             }
         }
         check = board[yCord][xCord];
@@ -247,7 +258,7 @@ public class StandardGameRules implements GameRulesInterface
     {
         for (int[] cords : UpperPools)
         {
-            pools[cords[0]][cords[1]] = PlayerId.FOUR;
+            pools[cords[yCoordinatePlaceInArray]][cords[xCoordinatePlaceInArray]] = PlayerId.FOUR;
         }
         return pools;
     }
@@ -262,7 +273,7 @@ public class StandardGameRules implements GameRulesInterface
     {
         for (int[] cords : UpperLeftPools)
         {
-            pools[cords[0]][cords[1]] = PlayerId.THREE;
+            pools[cords[yCoordinatePlaceInArray]][cords[xCoordinatePlaceInArray]] = PlayerId.THREE;
         }
         return pools;
     }
@@ -277,7 +288,7 @@ public class StandardGameRules implements GameRulesInterface
     {
         for (int[] cords : UpperRightPools)
         {
-            pools[cords[0]][cords[1]] = PlayerId.FIVE;
+            pools[cords[yCoordinatePlaceInArray]][cords[xCoordinatePlaceInArray]] = PlayerId.FIVE;
         }
         return pools;
     }
@@ -292,7 +303,7 @@ public class StandardGameRules implements GameRulesInterface
     {
         for (int[] cords : BottomLeftPools)
         {
-            pools[cords[0]][cords[1]] = PlayerId.TWO;
+            pools[cords[yCoordinatePlaceInArray]][cords[xCoordinatePlaceInArray]] = PlayerId.TWO;
         }
         return pools;
     }
@@ -307,7 +318,7 @@ public class StandardGameRules implements GameRulesInterface
     {
         for (int[] cords : BottomRightPools)
         {
-            pools[cords[0]][cords[1]] = PlayerId.SIX;
+            pools[cords[yCoordinatePlaceInArray]][cords[xCoordinatePlaceInArray]] = PlayerId.SIX;
         }
         return pools;
     }
@@ -322,7 +333,7 @@ public class StandardGameRules implements GameRulesInterface
     {
         for (int[] cords : BottomPools)
         {
-            pools[cords[0]][cords[1]] = PlayerId.ONE;
+            pools[cords[yCoordinatePlaceInArray]][cords[xCoordinatePlaceInArray]] = PlayerId.ONE;
         }
         return pools;
     }

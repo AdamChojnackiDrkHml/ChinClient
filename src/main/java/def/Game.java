@@ -10,20 +10,26 @@ import java.util.Scanner;
  */
 public class Game
 {
-   private PlayerId[][] gameBoard = new PlayerId[17][17];
-   private final GameRulesInterface gamePoolsRules;
-   private final PlayerId playerId;
+    private static final int NumberOfCoordinates = 2;
+    private static final int xCoordinatePlaceInArray = 1;
+    private static final int yCoordinatePlaceInArray = 0;
+    private static final int[] DefaultCoordinateArray = {0,0};
 
 
-   private int[] chosen = new int[2];
-   private int[] prevJumpPos = new int[2];
+    private PlayerId[][] gameBoard = new PlayerId[GameRulesInterface.BoardSize][GameRulesInterface.BoardSize];
+    private final GameRulesInterface gamePoolsRules;
+    private final PlayerId playerId;
 
-   //Set of flags used to control logic
-   private boolean isChosen = false;
-   private boolean isItMyTurn = false;
-   private boolean canIMove = false;
-   private boolean isJumping = false;
-   private boolean haveIWon = false;
+
+    private int[] chosen = new int[NumberOfCoordinates];
+    private int[] prevJumpPos = new int[NumberOfCoordinates];
+
+    //Set of flags used to control logic
+    private boolean isChosen = false;
+    private boolean isItMyTurn = false;
+    private boolean canIMove = false;
+    private boolean isJumping = false;
+    private boolean haveIWon = false;
 
 
     /**
@@ -41,6 +47,8 @@ public class Game
 
     /**
      * This function is pretty straightforward, it decides whether the pool is contained in board or not
+     * There is a lot of coordinates and magic numbers, naming all of them would completely mess up
+     * clarity
      * @param xCord x coordinate of pool
      * @param yCord y coordinate of pool
      * @return true if it is contained, false otherwise
@@ -66,9 +74,9 @@ public class Game
      */
     private void choosePools(NumberOfPlayers numOfPlayers)
     {
-        for(int i = 0; i < 17; i++)
+        for(int i = 0; i < GameRulesInterface.BoardSize; i++)
         {
-            for(int j = 0; j < 17; j++)
+            for(int j = 0; j < GameRulesInterface.BoardSize; j++)
             {
                 if(isThisValidPool(j,i))
                 {
@@ -142,7 +150,7 @@ public class Game
         {
             if (!isChosen && !isJumping)
             {
-                if (gameBoard[pos[0]][pos[1]].equals(playerId))
+                if (gameBoard[pos[yCoordinatePlaceInArray]][pos[xCoordinatePlaceInArray]].equals(playerId))
                 {
                     chosen = pos;
                     isChosen = true;
@@ -154,34 +162,37 @@ public class Game
             }
             else
             {
-                if (gameBoard[pos[0]][pos[1]].equals(playerId) && !isJumping)
+                if (gameBoard[pos[yCoordinatePlaceInArray]][pos[xCoordinatePlaceInArray]].equals(playerId) && !isJumping)
                 {
                     if (Arrays.equals(chosen, pos))
                     {
                         isChosen = false;
-                        chosen = new int[]{0, 0};
+                        chosen = DefaultCoordinateArray;
                     }
                     else
                     {
                         chosen = pos;
                     }
                 }
-                else if (gameBoard[pos[0]][pos[1]].equals(PlayerId.ZERO) && gamePoolsRules.isMoveValid(chosen, pos, playerId) && !isJumping)
+                else if (gameBoard[pos[yCoordinatePlaceInArray]][pos[xCoordinatePlaceInArray]].equals(PlayerId.ZERO)
+                        && gamePoolsRules.isMoveValid(chosen, pos, playerId) && !isJumping)
                 {
                     CommunicationCenter.signalizeMove("MOVE");
                     CommunicationCenter.signalizeMove(playerId.name() + " " + chosen[1] + " " + chosen[0] + " " + pos[1] + " " + pos[0]);
-                    gameBoard[pos[0]][pos[1]] = playerId;
+                    gameBoard[pos[yCoordinatePlaceInArray]][pos[xCoordinatePlaceInArray]] = playerId;
                     gameBoard[chosen[0]][chosen[1]] = PlayerId.ZERO;
-                    chosen = new int[]{0, 0};
+                    chosen = DefaultCoordinateArray;
                     isChosen = false;
                     canIMove = false;
                 }
-                else if(gameBoard[pos[0]][pos[1]].equals(PlayerId.ZERO) && gamePoolsRules.isJumpValid(chosen, pos, playerId) && gamePoolsRules.jumpCondition(gameBoard, chosen, pos, prevJumpPos))
+                else if(gameBoard[pos[yCoordinatePlaceInArray]][pos[xCoordinatePlaceInArray]].equals(PlayerId.ZERO)
+                        && gamePoolsRules.isJumpValid(chosen, pos, playerId)
+                        && gamePoolsRules.jumpCondition(gameBoard, chosen, pos, prevJumpPos))
                 {
                     CommunicationCenter.signalizeMove("MOVE JUMP");
                     CommunicationCenter.signalizeMove(playerId.name() + " " + chosen[1] + " " + chosen[0] + " " + pos[1] + " " + pos[0]);
-                    gameBoard[pos[0]][pos[1]] = playerId;
-                    gameBoard[chosen[0]][chosen[1]] = PlayerId.ZERO;
+                    gameBoard[pos[yCoordinatePlaceInArray]][pos[xCoordinatePlaceInArray]] = playerId;
+                    gameBoard[chosen[yCoordinatePlaceInArray]][chosen[xCoordinatePlaceInArray]] = PlayerId.ZERO;
                     prevJumpPos = chosen;
                     chosen = pos;
                     isJumping = true;
@@ -205,8 +216,8 @@ public class Game
 
         if(isItMyTurn)
         {
-            chosen = new int[]{0, 0};
-            prevJumpPos = new int[]{0,0};
+            chosen = DefaultCoordinateArray;
+            prevJumpPos = DefaultCoordinateArray;
             isChosen = false;
             isJumping = false;
             canIMove = false;

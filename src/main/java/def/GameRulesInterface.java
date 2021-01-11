@@ -7,6 +7,9 @@ package def;
  */
 public interface GameRulesInterface
 {
+    int BoardSize = 17;
+    int NumberOfPoolsInEnemyBase = 10;
+
     boolean checkIfInEnemyBase(int[] originalPosition, int[] desirePosition, PlayerId id);
     boolean isMoveValid(int[] originalPosition, int[] desirePosition, PlayerId id);
     boolean isJumpValid(int[] originalPosition, int[] desirePosition, PlayerId id);

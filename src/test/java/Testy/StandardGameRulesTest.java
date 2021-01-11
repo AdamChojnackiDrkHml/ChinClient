@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 import def.*;
 import org.junit.Test;
 
-public class StandardGamePolsTest
+public class StandardGameRulesTest
 {
     /**
      * This test checks if board is set correctly for given number of players
