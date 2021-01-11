@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 /**
  * This class is responsible for scanning input and sending output to server
- * @author Adam Chojnacki i Ela Wiśniewska
+ * @author Elzbieta Wisniewska and Adam Chojnacki
  * @version 4.0
  */
 public class CommunicationCenter

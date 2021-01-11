@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 /**
  *  This class implements rules interface and is responsible for handling game rules and questions.
- * @author Adam Chojnacki i Ela Wiśniewska
+ * @author Elzbieta Wisniewska and Adam Chojnacki
  * @version 10.0
  */
 public class StandardGameRules implements GameRulesInterface

@@ -2,7 +2,7 @@ package def;
 
 /**
  * Interface containing functions used to set rules for the game. It can be later implemented to easily modify rules.
- * @author Adam Chojnacki i Ela Wiśniewska
+ * @author Elzbieta Wisniewska and Adam Chojnacki
  * @version 4.0
  */
 public interface GameRulesInterface

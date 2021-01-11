@@ -9,7 +9,7 @@ import java.util.Arrays;
 
 /**
  * Board Class is main user interface, it is responsible for displaying board and scan user input
- * @author Adam Chojnacki i Ela Wiśniewska
+ * @author Elzbieta Wisniewska and Adam Chojnacki
  * @version 2.0
  */
 public class Board extends JPanel

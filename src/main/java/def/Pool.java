@@ -4,7 +4,7 @@ import java.awt.geom.Ellipse2D;
 
 /**
  * Objects of this class imitates pools on a board, it contains 2D Ellipse to be drawn, and x,y gameboard coordinates
- * @author Adam Chojnacki i Ela Wiśniewska
+ * @author Elzbieta Wisniewska and Adam Chojnacki
  */
 public class Pool
 {

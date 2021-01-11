@@ -14,7 +14,7 @@ import static java.lang.Thread.sleep;
 
 /**
  * A client for a multi-player Chinese checkers toe game. It extends JFrame and holds the board and the game itself.
- * @author Adam Chojnacki i Ela Wiśniewska
+ * @author Elzbieta Wisniewska and Adam Chojnacki
  * @version 13254.0
  */
 public class Client extends JFrame implements ActionListener

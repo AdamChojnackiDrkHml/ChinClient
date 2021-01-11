@@ -4,7 +4,7 @@ import java.io.IOException;
 
 /**
  * This class contains MainApp and initializes program start
- * @author Adam Chojnacki i Ela Wiśniewska
+ * @author Elzbieta Wisniewska and Adam Chojnacki
  * @version 1.0
  */
 public class MainApp

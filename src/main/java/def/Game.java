@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 /**
  * The class that holds whole game, game current state and logic.
- * @author Adam Chojnacki i Ela Wiśniewska
+ * @author Elzbieta Wisniewska and Adam Chojnacki
  * @version 20.0
  */
 public class Game
