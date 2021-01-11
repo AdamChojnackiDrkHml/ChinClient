@@ -3,7 +3,12 @@ package def;
 
 import java.util.Arrays;
 
-public class StandardGamePools implements PlayerPoolsInterface
+/**
+ *  This class implements rules interface and is responsible for handling game rules and questions.
+ * @author Adam Chojnacki i Ela Wiśniewska
+ * @version 10.0
+ */
+public class StandardGameRules implements GameRulesInterface
 {
     int[][] UpperPools = {{0,8}, {1,7}, {1,8}, {2,7}, {2,8}, {2,9}, {3,6}, {3,7}, {3,8}, {3,9}};
     int[][] UpperLeftPools = {{4,2}, {4,3}, {4,4}, {4,5}, {5,2}, {5,3}, {5,4}, {6,3}, {6,4}, {7,3}};
@@ -19,6 +24,13 @@ public class StandardGamePools implements PlayerPoolsInterface
     int[][] possibleJumps = { {2, 1}, {2, -1}, {-2, 1}, {-2, -1}, {0,2}, {0,-2}};
 
 
+    /**
+     * This function checks if player is currently in enemy base and if so is he trying to exit it, which is forbidden.
+     * @param originalPosition original Player position
+     * @param desirePosition position that Player wants to move on
+     * @param id Players' id
+     * @return true if player is trying to make restricted move, false otherwise
+     */
     @Override
     public boolean checkIfInEnemyBase(int[] originalPosition, int[] desirePosition, PlayerId id)
     {
@@ -39,8 +51,17 @@ public class StandardGamePools implements PlayerPoolsInterface
         }
         return (isOriginInBase && !isDestInBase);
     }
+
+
+    /**
+     * This function checks if player is making accepted move
+     * @param originalPosition original Player position
+     * @param desirePosition position that Player wants to move on
+     * @param id moving players' id
+     * @return true if move is valid, false otherwise
+     */
     @Override
-    public boolean isMoveValid(int rowNum, int[] originalPosition, int[] desirePosition, PlayerId id)
+    public boolean isMoveValid(int[] originalPosition, int[] desirePosition, PlayerId id)
     {
         if(checkIfInEnemyBase(originalPosition, desirePosition, id))
         {
@@ -48,7 +69,7 @@ public class StandardGamePools implements PlayerPoolsInterface
         }
         int moveX = desirePosition[1] - originalPosition[1];
         int moveY = desirePosition[0] - originalPosition[0];
-        if(rowNum % 2 == 0)
+        if(originalPosition[0] % 2 == 0)
         {
             for(int[] move : possibleParityMoves)
             {
@@ -71,6 +92,14 @@ public class StandardGamePools implements PlayerPoolsInterface
         return false;
     }
 
+    /**
+     * This function decides if the jump that player tries don't violate the rules of jumping basic convention
+     * (jump is set of two pools move, in straight direction)
+     * @param originalPosition original Player position
+     * @param desirePosition position that Player wants to move on
+     * @param id Players' id
+     * @return true if jump is valid, false otherwise
+     */
     @Override
     public boolean isJumpValid(int[] originalPosition, int[] desirePosition, PlayerId id)
     {
@@ -93,6 +122,15 @@ public class StandardGamePools implements PlayerPoolsInterface
         return false;
     }
 
+    /**
+     * This function checks if player doesn't try to jump back and if player jumps over exactly one pawn that lies exactly
+     * in the middle of a jump.
+     * @param board game board is passed to check for pawns
+     * @param originalPosition original Player position
+     * @param desirePosition position that Player wants to move on
+     * @param previousJumpPos start position of last jump to prevent jumping back
+     * @return true if jump is valid, false otherwise
+     */
     @Override
     public boolean jumpCondition(PlayerId[][] board, int[] originalPosition, int[] desirePosition, int[] previousJumpPos)
     {
@@ -154,120 +192,13 @@ public class StandardGamePools implements PlayerPoolsInterface
         return (!check.equals(PlayerId.ZERO));
 
     }
-    @Override
-    public PlayerId[][] setUpperPools(PlayerId[][] pools)
-    {
-        for (int[] cords : UpperPools)
-        {
-            pools[cords[0]][cords[1]] = PlayerId.FOUR;
-        }
-        return pools;
-    }
 
-    @Override
-    public PlayerId[][] setUpperLeftPools(PlayerId[][] pools)
-    {
-        for (int[] cords : UpperLeftPools)
-        {
-            pools[cords[0]][cords[1]] = PlayerId.THREE;
-        }
-        return pools;
-    }
-
-    @Override
-    public PlayerId[][] setUpperRightPools(PlayerId[][] pools)
-    {
-        for (int[] cords : UpperRightPools)
-        {
-            pools[cords[0]][cords[1]] = PlayerId.FIVE;
-        }
-        return pools;
-    }
-
-    @Override
-    public PlayerId[][] setBottomLeftPools(PlayerId[][] pools)
-    {
-        for (int[] cords : BottomLeftPools)
-        {
-            pools[cords[0]][cords[1]] = PlayerId.TWO;
-        }
-        return pools;
-    }
-
-    @Override
-    public PlayerId[][] setBottomRightPools(PlayerId[][] pools)
-    {
-        for (int[] cords : BottomRightPools)
-        {
-            pools[cords[0]][cords[1]] = PlayerId.SIX;
-        }
-        return pools;
-    }
-
-    @Override
-    public PlayerId[][] setBottomPools(PlayerId[][] pools)
-    {
-        for (int[] cords : BottomPools)
-        {
-            pools[cords[0]][cords[1]] = PlayerId.ONE;
-        }
-        return pools;
-    }
-
-    @Override
-    public PlayerId[][] setBoardForTwoPlayers(PlayerId[][] pools)
-    {
-        return setBottomPools(setUpperPools(pools));
-    }
-
-    @Override
-    public PlayerId[][] setBoardForThreePlayers(PlayerId[][] pools)
-    {
-        return setBottomPools(setUpperLeftPools(setUpperRightPools(pools)));
-
-    }
-
-    @Override
-    public PlayerId[][] setBoardForFourPlayers(PlayerId[][] pools)
-    {
-        return setUpperRightPools(setBottomLeftPools(setBoardForTwoPlayers(pools)));
-
-    }
-
-    @Override
-    public PlayerId[][] setBoardForSixPlayers(PlayerId[][] pools)
-    {
-        return setBoardForFourPlayers(setUpperLeftPools(setBottomRightPools(pools)));
-    }
-
-    @Override
-    public PlayerId[][] setUpBoardForPlayers(NumberOfPlayers numOfPlayers, PlayerId[][] pools)
-    {
-        switch (numOfPlayers)
-        {
-            case TWO:
-            {
-                return setBoardForTwoPlayers(pools);
-            }
-            case THREE:
-            {
-                return setBoardForThreePlayers(pools);
-            }
-            case FOUR:
-            {
-                return setBoardForFourPlayers(pools);
-            }
-            case SIX:
-            {
-                return setBoardForSixPlayers(pools);
-            }
-            default:
-            {
-                return setBottomPools(pools);
-            }
-        }
-    }
-
+    /**
+     * This function determines one of six directions of player move
+     * @param moveX x axis move
+     * @param moveY y axis move
+     * @return number from 1 to 6, depending on arguments passed, counting from 1 which is bottom right move, clockwise
+     */
     @Override
     public int getDirection(int moveX, int moveY)
     {
@@ -305,4 +236,175 @@ public class StandardGamePools implements PlayerPoolsInterface
         }
         return 0;
     }
+
+    /**
+     * This function sets player pawns on a board for player four
+     * @param pools game board
+     * @return game board set with pawns
+     */
+    @Override
+    public PlayerId[][] setUpperPools(PlayerId[][] pools)
+    {
+        for (int[] cords : UpperPools)
+        {
+            pools[cords[0]][cords[1]] = PlayerId.FOUR;
+        }
+        return pools;
+    }
+
+    /**
+     * This function sets player pawns on a board for player three
+     * @param pools game board
+     * @return game board set with pawns
+     */
+    @Override
+    public PlayerId[][] setUpperLeftPools(PlayerId[][] pools)
+    {
+        for (int[] cords : UpperLeftPools)
+        {
+            pools[cords[0]][cords[1]] = PlayerId.THREE;
+        }
+        return pools;
+    }
+
+    /**
+     * This function sets player pawns on a board for player five
+     * @param pools game board
+     * @return game board set with pawns
+     */
+    @Override
+    public PlayerId[][] setUpperRightPools(PlayerId[][] pools)
+    {
+        for (int[] cords : UpperRightPools)
+        {
+            pools[cords[0]][cords[1]] = PlayerId.FIVE;
+        }
+        return pools;
+    }
+
+    /**
+     * This function sets player pawns on a board for player two
+     * @param pools game board
+     * @return game board set with pawns
+     */
+    @Override
+    public PlayerId[][] setBottomLeftPools(PlayerId[][] pools)
+    {
+        for (int[] cords : BottomLeftPools)
+        {
+            pools[cords[0]][cords[1]] = PlayerId.TWO;
+        }
+        return pools;
+    }
+
+    /**
+     * This function sets player pawns on a board for player six
+     * @param pools game board
+     * @return game board set with pawns
+     */
+    @Override
+    public PlayerId[][] setBottomRightPools(PlayerId[][] pools)
+    {
+        for (int[] cords : BottomRightPools)
+        {
+            pools[cords[0]][cords[1]] = PlayerId.SIX;
+        }
+        return pools;
+    }
+
+    /**
+     * This function sets player pawns on a board for player one
+     * @param pools game board
+     * @return game board set with pawns
+     */
+    @Override
+    public PlayerId[][] setBottomPools(PlayerId[][] pools)
+    {
+        for (int[] cords : BottomPools)
+        {
+            pools[cords[0]][cords[1]] = PlayerId.ONE;
+        }
+        return pools;
+    }
+
+    /**
+     * This function sets player pawns for two players game
+     * @param pools game board
+     * @return game board set with pawns
+     */
+    @Override
+    public PlayerId[][] setBoardForTwoPlayers(PlayerId[][] pools)
+    {
+        return setBottomPools(setUpperPools(pools));
+    }
+
+    /**
+     * This function sets player pawns on a board for three players game
+     * @param pools game board
+     * @return game board set with pawns
+     */
+    @Override
+    public PlayerId[][] setBoardForThreePlayers(PlayerId[][] pools)
+    {
+        return setBottomPools(setUpperLeftPools(setUpperRightPools(pools)));
+
+    }
+
+    /**
+     * This function sets player pawns on a board for four players game
+     * @param pools game board
+     * @return game board set with pawns
+     */
+    @Override
+    public PlayerId[][] setBoardForFourPlayers(PlayerId[][] pools)
+    {
+        return setUpperRightPools(setBottomLeftPools(setBoardForTwoPlayers(pools)));
+
+    }
+
+    /**
+     * This function sets player pawns on a board for six players game
+     * @param pools game board
+     * @return game board set with pawns
+     */
+    @Override
+    public PlayerId[][] setBoardForSixPlayers(PlayerId[][] pools)
+    {
+        return setBoardForFourPlayers(setUpperLeftPools(setBottomRightPools(pools)));
+    }
+
+    /**
+     * This function sets player pawns on a board depending on passed number of players
+     * @param numOfPlayers number of players in a game
+     * @param pools game board
+     * @return game board set with pawns
+     */
+    @Override
+    public PlayerId[][] setUpBoardForPlayers(NumberOfPlayers numOfPlayers, PlayerId[][] pools)
+    {
+        switch (numOfPlayers)
+        {
+            case TWO:
+            {
+                return setBoardForTwoPlayers(pools);
+            }
+            case THREE:
+            {
+                return setBoardForThreePlayers(pools);
+            }
+            case FOUR:
+            {
+                return setBoardForFourPlayers(pools);
+            }
+            case SIX:
+            {
+                return setBoardForSixPlayers(pools);
+            }
+            default:
+            {
+                return setBottomPools(pools);
+            }
+        }
+    }
+
 }

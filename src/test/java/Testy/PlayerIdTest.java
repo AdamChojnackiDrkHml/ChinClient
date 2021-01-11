@@ -5,6 +5,9 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 public class PlayerIdTest
 {
+    /**
+     * This test checks if getInt function returns expected value
+     */
     @Test
     public void getIntTest()
     {

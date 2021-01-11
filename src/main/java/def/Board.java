@@ -7,13 +7,21 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-
+/**
+ * Board Class is main user interface, it is responsible for displaying board and scan user input
+ * @author Adam Chojnacki i Ela Wiśniewska
+ * @version 2.0
+ */
 public class Board extends JPanel
 {
 
     private final ArrayList<Pool> pools = new ArrayList<>();
     private final Game game;
 
+    /**
+     * Basic constructor of Board, it calls for setUp function to properly initialize Board.
+     * @param game Game object created earlier
+     */
     public Board(Game game)
     {
         this.game = game;
@@ -21,6 +29,9 @@ public class Board extends JPanel
         setUp();
     }
 
+    /**
+     * Primitive function to choose the color basing on passed PlayerId
+     */
     public Color chooseColor(PlayerId id)
     {
         switch (id)
@@ -57,6 +68,9 @@ public class Board extends JPanel
     }
 
 
+    /**
+     * This function is responsible for creating Pool objects, adjusting their position, and adding them to Pool list.
+     */
     private void choosePools()
     {
         for(int i = 0; i < 17; i++)
@@ -81,6 +95,9 @@ public class Board extends JPanel
         }
     }
 
+    /**
+     * This function initializes all necessary components and functions required for board to work.
+     */
     void setUp()
     {
         choosePools();
@@ -89,7 +106,10 @@ public class Board extends JPanel
     }
 
 
-
+    /**
+     * Painting function, that has a logic to decide how to properly paint all panel components and background.
+     * @param g i don't really know
+     */
     protected void paintComponent(Graphics g)
     {
         super.paintComponent(g);
@@ -119,6 +139,9 @@ public class Board extends JPanel
 
     }
 
+    /**
+     * Mouse listener that reads coordinates of user mouse click and call for Connect with game function.
+     */
     MouseAdapter MyMouseListener = new MouseAdapter()
     {
         @Override
@@ -136,6 +159,12 @@ public class Board extends JPanel
         }
     };
 
+    /**
+     * This function takes coordinates of mouse click, and tries to find a pool containing it. If it succeed, it calls for Game function.
+     * @param x x coordinate of mouse click
+     * @param y y coordinate of mouse click
+     * @throws IncorrectFieldException thrown by Game function if invalid Pool is met
+     */
     public void contactWithGame(int x, int y) throws IncorrectFieldException
     {
         for (Pool pool : pools)
@@ -148,13 +177,13 @@ public class Board extends JPanel
             }
         }
     }
+    public ArrayList<Pool> getPools()
+    {
+        return pools;
+    }
     public Game getGame()
     {
         return this.game;
     }
 
-    public ArrayList<Pool> getPools()
-    {
-        return pools;
-    }
 }

@@ -11,6 +11,9 @@ import java.net.Socket;
 
 public class ClientTest
 {
+    /**
+     * This test test if Client object is created properly as a window
+     */
     @Test
     public void testFrame() throws Exception
     {

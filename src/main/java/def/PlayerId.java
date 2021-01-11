@@ -1,5 +1,11 @@
 package def;
 
+/**
+ * Enum used to easily control which player takes actions and to properly set up board.
+ * It also contains function that returns number value of enum
+ * @author Adam Chojnacki i Ela Wiśniewska
+ * @version 2.0
+ */
 public enum PlayerId
 {
     ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, NULL;

@@ -13,21 +13,31 @@ import javax.swing.*;
 import static java.lang.Thread.sleep;
 
 /**
- * A client for a multi-player Chinese checkers toe game.
+ * A client for a multi-player Chinese checkers toe game. It extends JFrame and holds the board and the game itself.
+ * @author Adam Chojnacki i Ela Wiśniewska
+ * @version 13254.0
  */
 public class Client extends JFrame implements ActionListener
 {
 
-    private final JLabel messageLabel = new JLabel("Waiting for opponent's to connect");
+
     private Board board;
 
     private Socket socket;
     private Scanner in;
     private PrintWriter out;
+
     private CommunicationCenter communicationCenter;
+
+    private final JLabel messageLabel = new JLabel("Waiting for opponent's to connect");
     private PlayerId id;
     private JButton endTurn;
 
+    /**
+     * Client constructor, creates and initializes all components
+     * @param serverAddress ip for socket connection
+     * @throws Exception like a lot
+     */
     public Client(String serverAddress) throws Exception 
     {
         super("Chinese checkers");
@@ -39,13 +49,23 @@ public class Client extends JFrame implements ActionListener
         initializeFrame();
     }
 
+    /**
+     * This function sets up frame properties
+     */
     private void initializeFrame()
     {
+        setTitle("Chinese checkers: Player " + id.name());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(40 * 18, 40 * 20);
         setVisible(true);
         setResizable(false);
     }
+
+    /**
+     * This function is responsible for setting up connection and IO handlers
+     * @param serverAddress ip of the server
+     * @throws IOException in case server is dead, or wrong ip address was given
+     */
     private void initializeConnectionStuff(String serverAddress) throws IOException
     {
         socket = new Socket(serverAddress, 58901);
@@ -53,16 +73,23 @@ public class Client extends JFrame implements ActionListener
         out = new PrintWriter(socket.getOutputStream(), true);
     }
 
+    /**
+     * This function initializes Board, Game and Communication Center. It reads values passed by a server
+     * and then uses them as parameters for creating objects
+     */
     private void initializeGameStuff()
     {
         NumberOfPlayers numOfPlayers = NumberOfPlayers.valueOf(in.nextLine());
         id = PlayerId.valueOf(in.nextLine());
 
-        board = new Board(new Game(id, numOfPlayers, new StandardGamePools()));
+        board = new Board(new Game(id, numOfPlayers, new StandardGameRules()));
 
         communicationCenter = new CommunicationCenter(out, board, in);
     }
 
+    /**
+     * This function initializes message label and adds it to the frame.
+     */
     private void initializeMessageLabel()
     {
         messageLabel.setBackground(Color.lightGray);
@@ -70,6 +97,9 @@ public class Client extends JFrame implements ActionListener
         getContentPane().add(board);
     }
 
+    /**
+     * This function initializes end turn button and adds it to the frame.
+     */
     private void initializeButton()
     {
         endTurn = new JButton("End turn");
@@ -78,21 +108,15 @@ public class Client extends JFrame implements ActionListener
     }
 
     /**
-     * The main thread of the client will listen for messages from the server. The
-     * first message will be a "WELCOME" message in which we receive our mark. Then
-     * we go into a loop listening for any of the other messages, and handling each
-     * message appropriately. The "VICTORY", "DEFEAT", "TIE", and
-     * "OTHER_PLAYER_LEFT" messages will ask the user whether or not to play another
-     * game. If the answer is no, the loop is exited and the server is sent a "QUIT"
-     * message.
+     * The main thread of the client will listen for messages from the server and check for updates.
+     * This function is basically responsible for calling functions when they are needed and decide what should happen
+     * and who should get information. It actualises messageLabel and holds the loop until the player finishes his turn.
      */
 
     public void play() throws Exception 
     {
         try
         {
-
-            setTitle("Chinese checkers: Player " + id.name());
 
             while (in.hasNextLine()) 
             {
@@ -156,6 +180,9 @@ public class Client extends JFrame implements ActionListener
         }
     }
 
+    /**
+     * Basic listener for end turn button click
+     */
     public void actionPerformed(ActionEvent e)
     {
         Object source = e.getSource();

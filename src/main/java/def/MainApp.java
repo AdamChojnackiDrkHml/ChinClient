@@ -2,6 +2,11 @@ package def;
 
 import java.io.IOException;
 
+/**
+ * This class contains MainApp and initializes program start
+ * @author Adam Chojnacki i Ela Wiśniewska
+ * @version 1.0
+ */
 public class MainApp
 {
     public static void main(String[] args) throws Exception

@@ -1,10 +1,14 @@
 package def;
 
-
-public interface PlayerPoolsInterface
+/**
+ * Interface containing functions used to set rules for the game. It can be later implemented to easily modify rules.
+ * @author Adam Chojnacki i Ela Wiśniewska
+ * @version 4.0
+ */
+public interface GameRulesInterface
 {
     boolean checkIfInEnemyBase(int[] originalPosition, int[] desirePosition, PlayerId id);
-    boolean isMoveValid(int rowNum, int[] originalPosition, int[] desirePosition, PlayerId id);
+    boolean isMoveValid(int[] originalPosition, int[] desirePosition, PlayerId id);
     boolean isJumpValid(int[] originalPosition, int[] desirePosition, PlayerId id);
     boolean jumpCondition(PlayerId[][] board, int[] originalPosition, int[] desirePosition, int[] previousJumpPos);
     PlayerId[][] setUpperPools(PlayerId[][] pools);
